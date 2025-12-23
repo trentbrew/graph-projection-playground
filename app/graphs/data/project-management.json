@@ -1,0 +1,263 @@
+{
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "ex": "https://example.com/ns#",
+    "name": "schema:name",
+    "description": "schema:description",
+    "createdAt": {
+      "@id": "schema:dateCreated",
+      "@type": "xsd:dateTime"
+    },
+    "updatedAt": {
+      "@id": "schema:dateModified",
+      "@type": "xsd:dateTime"
+    },
+    "startDate": {
+      "@id": "schema:startDate",
+      "@type": "xsd:dateTime"
+    },
+    "endDate": {
+      "@id": "schema:endDate",
+      "@type": "xsd:dateTime"
+    },
+    "dueDate": {
+      "@id": "ex:dueDate",
+      "@type": "xsd:dateTime"
+    },
+    "completedAt": {
+      "@id": "ex:completedAt",
+      "@type": "xsd:dateTime"
+    },
+    "member": {
+      "@id": "schema:member",
+      "@type": "@id"
+    },
+    "assignee": {
+      "@id": "ex:assignee",
+      "@type": "@id"
+    },
+    "reporter": {
+      "@id": "ex:reporter",
+      "@type": "@id"
+    },
+    "status": {
+      "@id": "ex:status",
+      "@type": "@id"
+    },
+    "priority": "ex:priority",
+    "storyPoints": "ex:storyPoints",
+    "project": {
+      "@id": "ex:project",
+      "@type": "@id"
+    },
+    "sprint": {
+      "@id": "ex:sprint",
+      "@type": "@id"
+    },
+    "milestone": {
+      "@id": "ex:milestone",
+      "@type": "@id"
+    },
+    "blockedBy": {
+      "@id": "ex:blockedBy",
+      "@type": "@id"
+    },
+    "blocks": {
+      "@id": "ex:blocks",
+      "@type": "@id"
+    },
+    "relatesTo": {
+      "@id": "schema:relatedTo",
+      "@type": "@id"
+    }
+  },
+  "@id": "https://example.com/workspaces/demo",
+  "@type": ["ex:Workspace"],
+  "name": "Demo Workspace",
+  "description": "Sample JSON-LD dataset for project/task management projections.",
+  "createdAt": "2025-12-01T09:00:00Z",
+  "updatedAt": "2025-12-22T18:10:00Z",
+  "@graph": [
+    {
+      "@id": "https://example.com/teams/platform",
+      "@type": ["ex:Team"],
+      "name": "Platform Team",
+      "description": "Builds the product platform and internal tools.",
+      "member": [
+        "https://example.com/people/alex",
+        "https://example.com/people/briar",
+        "https://example.com/people/casey",
+        "https://example.com/people/devon"
+      ]
+    },
+    {
+      "@id": "https://example.com/people/alex",
+      "@type": ["schema:Person", "ex:User"],
+      "name": "Alex Rivera",
+      "description": "Product lead"
+    },
+    {
+      "@id": "https://example.com/people/briar",
+      "@type": ["schema:Person", "ex:User"],
+      "name": "Briar Chen",
+      "description": "Frontend engineer"
+    },
+    {
+      "@id": "https://example.com/people/casey",
+      "@type": ["schema:Person", "ex:User"],
+      "name": "Casey Novak",
+      "description": "Backend engineer"
+    },
+    {
+      "@id": "https://example.com/people/devon",
+      "@type": ["schema:Person", "ex:User"],
+      "name": "Devon Patel",
+      "description": "Design & research"
+    },
+    {
+      "@id": "https://example.com/status/todo",
+      "@type": ["ex:Status"],
+      "name": "Todo",
+      "priority": 1
+    },
+    {
+      "@id": "https://example.com/status/in-progress",
+      "@type": ["ex:Status"],
+      "name": "In Progress",
+      "priority": 2
+    },
+    {
+      "@id": "https://example.com/status/blocked",
+      "@type": ["ex:Status"],
+      "name": "Blocked",
+      "priority": 3
+    },
+    {
+      "@id": "https://example.com/status/done",
+      "@type": ["ex:Status"],
+      "name": "Done",
+      "priority": 4
+    },
+    {
+      "@id": "https://example.com/projects/projectional-editor",
+      "@type": ["ex:Project"],
+      "name": "Projectional Editor",
+      "description": "Build projectional editing and multi-projection views for JSON-LD.",
+      "createdAt": "2025-12-01T10:00:00Z",
+      "member": [
+        "https://example.com/people/alex",
+        "https://example.com/people/briar",
+        "https://example.com/people/casey",
+        "https://example.com/people/devon"
+      ]
+    },
+    {
+      "@id": "https://example.com/sprints/2025-w51",
+      "@type": ["ex:Sprint"],
+      "name": "Sprint W51",
+      "startDate": "2025-12-15T09:00:00Z",
+      "endDate": "2025-12-29T09:00:00Z",
+      "project": "https://example.com/projects/projectional-editor"
+    },
+    {
+      "@id": "https://example.com/milestones/mvp",
+      "@type": ["ex:Milestone"],
+      "name": "MVP",
+      "description": "Graph + table/list projections and stable document model.",
+      "dueDate": "2025-12-31T23:59:00Z",
+      "project": "https://example.com/projects/projectional-editor"
+    },
+    {
+      "@id": "https://example.com/issues/PE-101",
+      "@type": ["ex:Issue", "ex:Task"],
+      "name": "Graph extraction + initial graph view",
+      "description": "Extract nodes/edges from JSON-LD and render a first graph projection.",
+      "createdAt": "2025-12-02T10:15:00Z",
+      "updatedAt": "2025-12-22T18:05:00Z",
+      "dueDate": "2025-12-22T23:59:00Z",
+      "completedAt": "2025-12-22T18:05:00Z",
+      "project": "https://example.com/projects/projectional-editor",
+      "sprint": "https://example.com/sprints/2025-w51",
+      "milestone": "https://example.com/milestones/mvp",
+      "reporter": "https://example.com/people/alex",
+      "assignee": "https://example.com/people/casey",
+      "status": "https://example.com/status/done",
+      "priority": "P1",
+      "storyPoints": 5
+    },
+    {
+      "@id": "https://example.com/issues/PE-102",
+      "@type": ["ex:Issue", "ex:Task"],
+      "name": "Calendar projection",
+      "description": "Show tasks as calendar events by dueDate / startDate / endDate.",
+      "createdAt": "2025-12-05T09:00:00Z",
+      "updatedAt": "2025-12-22T18:07:00Z",
+      "dueDate": "2026-01-05T17:00:00Z",
+      "project": "https://example.com/projects/projectional-editor",
+      "sprint": "https://example.com/sprints/2025-w51",
+      "milestone": "https://example.com/milestones/mvp",
+      "reporter": "https://example.com/people/alex",
+      "assignee": "https://example.com/people/briar",
+      "status": "https://example.com/status/todo",
+      "priority": "P2",
+      "storyPoints": 3,
+      "blockedBy": ["https://example.com/issues/PE-104"]
+    },
+    {
+      "@id": "https://example.com/issues/PE-103",
+      "@type": ["ex:Issue", "ex:Bug"],
+      "name": "Date handling + timezone sanity",
+      "description": "Normalize dates, show local vs UTC, handle all-day tasks.",
+      "createdAt": "2025-12-08T13:20:00Z",
+      "updatedAt": "2025-12-22T17:20:00Z",
+      "dueDate": "2025-12-27T23:00:00Z",
+      "project": "https://example.com/projects/projectional-editor",
+      "sprint": "https://example.com/sprints/2025-w51",
+      "reporter": "https://example.com/people/briar",
+      "assignee": "https://example.com/people/casey",
+      "status": "https://example.com/status/in-progress",
+      "priority": "P1",
+      "storyPoints": 2
+    },
+    {
+      "@id": "https://example.com/issues/PE-104",
+      "@type": ["ex:Issue", "ex:Task"],
+      "name": "Projection registry + URL state",
+      "description": "Create a projection system for switching views (canvas/table/calendar/etc.).",
+      "createdAt": "2025-12-10T11:00:00Z",
+      "updatedAt": "2025-12-22T18:06:00Z",
+      "dueDate": "2025-12-24T18:00:00Z",
+      "project": "https://example.com/projects/projectional-editor",
+      "sprint": "https://example.com/sprints/2025-w51",
+      "milestone": "https://example.com/milestones/mvp",
+      "reporter": "https://example.com/people/alex",
+      "assignee": "https://example.com/people/alex",
+      "status": "https://example.com/status/in-progress",
+      "priority": "P1",
+      "storyPoints": 5,
+      "blocks": ["https://example.com/issues/PE-102"]
+    },
+    {
+      "@id": "https://example.com/meetings/triage-2025-12-23",
+      "@type": ["ex:Meeting", "schema:Event"],
+      "name": "Issue triage",
+      "description": "Review blockers, validate next projections, assign owners.",
+      "startDate": "2025-12-23T17:00:00Z",
+      "endDate": "2025-12-23T17:30:00Z",
+      "member": [
+        "https://example.com/people/alex",
+        "https://example.com/people/briar",
+        "https://example.com/people/casey",
+        "https://example.com/people/devon"
+      ],
+      "project": "https://example.com/projects/projectional-editor",
+      "relatesTo": [
+        "https://example.com/issues/PE-102",
+        "https://example.com/issues/PE-104"
+      ]
+    }
+  ]
+}

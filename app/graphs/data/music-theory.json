@@ -1,0 +1,315 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "music": "http://purl.org/ontology/mo/",
+    "theory": "https://example.org/music-theory#",
+    "contains": {
+      "@id": "theory:contains",
+      "@type": "@id"
+    },
+    "hasDegree": {
+      "@id": "theory:hasDegree",
+      "@type": "@id"
+    },
+    "hasInterval": {
+      "@id": "theory:hasInterval",
+      "@type": "@id"
+    },
+    "resolves": {
+      "@id": "theory:resolves",
+      "@type": "@id"
+    },
+    "progression": {
+      "@id": "theory:progression",
+      "@type": "@id"
+    },
+    "relativeMinor": {
+      "@id": "theory:relativeMinor",
+      "@type": "@id"
+    },
+    "relativeMajor": {
+      "@id": "theory:relativeMajor",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "theory:scale/C-major",
+      "@type": "theory:Scale",
+      "name": "C Major Scale",
+      "description": "The C major scale with no sharps or flats",
+      "tonic": "C",
+      "mode": "Ionian",
+      "relativeMinor": { "@id": "theory:scale/A-minor" },
+      "contains": [
+        { "@id": "theory:note/C" },
+        { "@id": "theory:note/D" },
+        { "@id": "theory:note/E" },
+        { "@id": "theory:note/F" },
+        { "@id": "theory:note/G" },
+        { "@id": "theory:note/A" },
+        { "@id": "theory:note/B" }
+      ]
+    },
+    {
+      "@id": "theory:scale/A-minor",
+      "@type": "theory:Scale",
+      "name": "A Natural Minor Scale",
+      "description": "The relative minor of C major",
+      "tonic": "A",
+      "mode": "Aeolian",
+      "relativeMajor": { "@id": "theory:scale/C-major" },
+      "contains": [
+        { "@id": "theory:note/A" },
+        { "@id": "theory:note/B" },
+        { "@id": "theory:note/C" },
+        { "@id": "theory:note/D" },
+        { "@id": "theory:note/E" },
+        { "@id": "theory:note/F" },
+        { "@id": "theory:note/G" }
+      ]
+    },
+    {
+      "@id": "theory:note/C",
+      "@type": "theory:Note",
+      "name": "C",
+      "frequency": 261.63,
+      "midiNumber": 60
+    },
+    {
+      "@id": "theory:note/D",
+      "@type": "theory:Note",
+      "name": "D",
+      "frequency": 293.66,
+      "midiNumber": 62
+    },
+    {
+      "@id": "theory:note/E",
+      "@type": "theory:Note",
+      "name": "E",
+      "frequency": 329.63,
+      "midiNumber": 64
+    },
+    {
+      "@id": "theory:note/F",
+      "@type": "theory:Note",
+      "name": "F",
+      "frequency": 349.23,
+      "midiNumber": 65
+    },
+    {
+      "@id": "theory:note/G",
+      "@type": "theory:Note",
+      "name": "G",
+      "frequency": 392.0,
+      "midiNumber": 67
+    },
+    {
+      "@id": "theory:note/A",
+      "@type": "theory:Note",
+      "name": "A",
+      "frequency": 440.0,
+      "midiNumber": 69
+    },
+    {
+      "@id": "theory:note/B",
+      "@type": "theory:Note",
+      "name": "B",
+      "frequency": 493.88,
+      "midiNumber": 71
+    },
+    {
+      "@id": "theory:chord/C-major",
+      "@type": "theory:Chord",
+      "name": "C Major",
+      "symbol": "C",
+      "quality": "Major",
+      "root": { "@id": "theory:note/C" },
+      "contains": [
+        { "@id": "theory:note/C" },
+        { "@id": "theory:note/E" },
+        { "@id": "theory:note/G" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/I-C-major" }]
+    },
+    {
+      "@id": "theory:chord/D-minor",
+      "@type": "theory:Chord",
+      "name": "D Minor",
+      "symbol": "Dm",
+      "quality": "Minor",
+      "root": { "@id": "theory:note/D" },
+      "contains": [
+        { "@id": "theory:note/D" },
+        { "@id": "theory:note/F" },
+        { "@id": "theory:note/A" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/ii-C-major" }]
+    },
+    {
+      "@id": "theory:chord/E-minor",
+      "@type": "theory:Chord",
+      "name": "E Minor",
+      "symbol": "Em",
+      "quality": "Minor",
+      "root": { "@id": "theory:note/E" },
+      "contains": [
+        { "@id": "theory:note/E" },
+        { "@id": "theory:note/G" },
+        { "@id": "theory:note/B" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/iii-C-major" }]
+    },
+    {
+      "@id": "theory:chord/F-major",
+      "@type": "theory:Chord",
+      "name": "F Major",
+      "symbol": "F",
+      "quality": "Major",
+      "root": { "@id": "theory:note/F" },
+      "contains": [
+        { "@id": "theory:note/F" },
+        { "@id": "theory:note/A" },
+        { "@id": "theory:note/C" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/IV-C-major" }]
+    },
+    {
+      "@id": "theory:chord/G-major",
+      "@type": "theory:Chord",
+      "name": "G Major",
+      "symbol": "G",
+      "quality": "Major",
+      "root": { "@id": "theory:note/G" },
+      "contains": [
+        { "@id": "theory:note/G" },
+        { "@id": "theory:note/B" },
+        { "@id": "theory:note/D" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/V-C-major" }],
+      "resolves": { "@id": "theory:chord/C-major" }
+    },
+    {
+      "@id": "theory:chord/A-minor",
+      "@type": "theory:Chord",
+      "name": "A Minor",
+      "symbol": "Am",
+      "quality": "Minor",
+      "root": { "@id": "theory:note/A" },
+      "contains": [
+        { "@id": "theory:note/A" },
+        { "@id": "theory:note/C" },
+        { "@id": "theory:note/E" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/vi-C-major" }]
+    },
+    {
+      "@id": "theory:chord/B-diminished",
+      "@type": "theory:Chord",
+      "name": "B Diminished",
+      "symbol": "Bdim",
+      "quality": "Diminished",
+      "root": { "@id": "theory:note/B" },
+      "contains": [
+        { "@id": "theory:note/B" },
+        { "@id": "theory:note/D" },
+        { "@id": "theory:note/F" }
+      ],
+      "hasDegree": [{ "@id": "theory:degree/vii-C-major" }],
+      "resolves": { "@id": "theory:chord/C-major" }
+    },
+    {
+      "@id": "theory:degree/I-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "I (Tonic)",
+      "degreeNumber": 1,
+      "function": "Tonic"
+    },
+    {
+      "@id": "theory:degree/ii-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "ii (Supertonic)",
+      "degreeNumber": 2,
+      "function": "Subdominant"
+    },
+    {
+      "@id": "theory:degree/iii-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "iii (Mediant)",
+      "degreeNumber": 3,
+      "function": "Tonic"
+    },
+    {
+      "@id": "theory:degree/IV-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "IV (Subdominant)",
+      "degreeNumber": 4,
+      "function": "Subdominant"
+    },
+    {
+      "@id": "theory:degree/V-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "V (Dominant)",
+      "degreeNumber": 5,
+      "function": "Dominant"
+    },
+    {
+      "@id": "theory:degree/vi-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "vi (Submediant)",
+      "degreeNumber": 6,
+      "function": "Tonic"
+    },
+    {
+      "@id": "theory:degree/vii-C-major",
+      "@type": "theory:ScaleDegree",
+      "name": "vii° (Leading Tone)",
+      "degreeNumber": 7,
+      "function": "Dominant"
+    },
+    {
+      "@id": "theory:progression/I-V-vi-IV",
+      "@type": "theory:ChordProgression",
+      "name": "I-V-vi-IV Progression",
+      "description": "Popular four-chord progression used in countless songs",
+      "progression": [
+        { "@id": "theory:chord/C-major" },
+        { "@id": "theory:chord/G-major" },
+        { "@id": "theory:chord/A-minor" },
+        { "@id": "theory:chord/F-major" }
+      ]
+    },
+    {
+      "@id": "theory:progression/ii-V-I",
+      "@type": "theory:ChordProgression",
+      "name": "ii-V-I Progression",
+      "description": "Common jazz progression establishing tonality",
+      "progression": [
+        { "@id": "theory:chord/D-minor" },
+        { "@id": "theory:chord/G-major" },
+        { "@id": "theory:chord/C-major" }
+      ]
+    },
+    {
+      "@id": "theory:interval/perfect-fifth",
+      "@type": "theory:Interval",
+      "name": "Perfect Fifth",
+      "semitones": 7,
+      "description": "The interval between C and G"
+    },
+    {
+      "@id": "theory:interval/major-third",
+      "@type": "theory:Interval",
+      "name": "Major Third",
+      "semitones": 4,
+      "description": "The interval between C and E"
+    },
+    {
+      "@id": "theory:interval/minor-third",
+      "@type": "theory:Interval",
+      "name": "Minor Third",
+      "semitones": 3,
+      "description": "The interval between D and F"
+    }
+  ]
+}

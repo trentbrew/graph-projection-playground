@@ -1,0 +1,73 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "tech": "https://example.org/tech#",
+    "uses": "tech:uses",
+    "provides": "tech:provides",
+    "requires": "tech:requires",
+    "partOf": "tech:partOf"
+  },
+  "@graph": [
+    {
+      "@id": "project:filegraph",
+      "@type": "SoftwareApplication",
+      "name": "Filegraph",
+      "description": "Local-first knowledge graph system",
+      "uses": [
+        { "@id": "tech:rust" },
+        { "@id": "tech:tauri" },
+        { "@id": "tech:jsonld" }
+      ]
+    },
+    {
+      "@id": "tech:rust",
+      "@type": "tech:Language",
+      "name": "Rust",
+      "provides": [{ "@id": "tech:wasm" }, { "@id": "tech:safety" }]
+    },
+    {
+      "@id": "tech:tauri",
+      "@type": "tech:Framework",
+      "name": "Tauri",
+      "requires": { "@id": "tech:rust" },
+      "provides": { "@id": "tech:shell" }
+    },
+    {
+      "@id": "tech:jsonld",
+      "@type": "tech:Format",
+      "name": "JSON-LD",
+      "provides": [{ "@id": "tech:semantics" }, { "@id": "tech:interop" }]
+    },
+    {
+      "@id": "tech:wasm",
+      "@type": "tech:Target",
+      "name": "WebAssembly",
+      "provides": { "@id": "tech:performance" }
+    },
+    {
+      "@id": "tech:safety",
+      "@type": "tech:Property",
+      "name": "Memory Safety"
+    },
+    {
+      "@id": "tech:shell",
+      "@type": "tech:Component",
+      "name": "Native Shell"
+    },
+    {
+      "@id": "tech:semantics",
+      "@type": "tech:Property",
+      "name": "Semantic Data"
+    },
+    {
+      "@id": "tech:interop",
+      "@type": "tech:Property",
+      "name": "Interoperability"
+    },
+    {
+      "@id": "tech:performance",
+      "@type": "tech:Property",
+      "name": "Performance"
+    }
+  ]
+}

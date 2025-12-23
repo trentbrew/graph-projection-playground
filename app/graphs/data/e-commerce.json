@@ -1,0 +1,175 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "product": "https://schema.org/Product",
+    "category": {
+      "@id": "https://schema.org/category",
+      "@type": "@id"
+    },
+    "manufacturer": {
+      "@id": "https://schema.org/manufacturer",
+      "@type": "@id"
+    },
+    "relatedTo": {
+      "@id": "https://schema.org/isRelatedTo",
+      "@type": "@id"
+    },
+    "partOf": {
+      "@id": "https://schema.org/isPartOf",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "https://shop.example/products/laptop-pro",
+      "@type": "Product",
+      "name": "UltraBook Pro 15",
+      "description": "High-performance laptop for professionals",
+      "price": 1299.99,
+      "priceCurrency": "USD",
+      "brand": "TechCorp",
+      "manufacturer": { "@id": "https://shop.example/brands/techcorp" },
+      "category": [
+        { "@id": "https://shop.example/categories/electronics" },
+        { "@id": "https://shop.example/categories/computers" }
+      ],
+      "relatedTo": [
+        "https://shop.example/products/laptop-bag",
+        "https://shop.example/products/wireless-mouse"
+      ]
+    },
+    {
+      "@id": "https://shop.example/products/laptop-bag",
+      "@type": "Product",
+      "name": "Premium Laptop Bag",
+      "description": "Protective bag for 15-inch laptops",
+      "price": 79.99,
+      "priceCurrency": "USD",
+      "brand": "AccessoryPlus",
+      "manufacturer": { "@id": "https://shop.example/brands/accessoryplus" },
+      "category": [{ "@id": "https://shop.example/categories/accessories" }],
+      "relatedTo": ["https://shop.example/products/laptop-pro"]
+    },
+    {
+      "@id": "https://shop.example/products/wireless-mouse",
+      "@type": "Product",
+      "name": "Ergonomic Wireless Mouse",
+      "description": "Comfortable wireless mouse with precision tracking",
+      "price": 49.99,
+      "priceCurrency": "USD",
+      "brand": "TechCorp",
+      "manufacturer": { "@id": "https://shop.example/brands/techcorp" },
+      "category": [
+        { "@id": "https://shop.example/categories/electronics" },
+        { "@id": "https://shop.example/categories/accessories" }
+      ],
+      "relatedTo": [
+        "https://shop.example/products/laptop-pro",
+        "https://shop.example/products/keyboard-mechanical"
+      ]
+    },
+    {
+      "@id": "https://shop.example/products/keyboard-mechanical",
+      "@type": "Product",
+      "name": "Mechanical Keyboard RGB",
+      "description": "Premium mechanical keyboard with RGB lighting",
+      "price": 129.99,
+      "priceCurrency": "USD",
+      "brand": "TechCorp",
+      "manufacturer": { "@id": "https://shop.example/brands/techcorp" },
+      "category": [
+        { "@id": "https://shop.example/categories/electronics" },
+        { "@id": "https://shop.example/categories/accessories" }
+      ],
+      "relatedTo": ["https://shop.example/products/wireless-mouse"]
+    },
+    {
+      "@id": "https://shop.example/products/monitor-4k",
+      "@type": "Product",
+      "name": "4K Ultra HD Monitor 27\"",
+      "description": "Professional 4K monitor with HDR support",
+      "price": 599.99,
+      "priceCurrency": "USD",
+      "brand": "DisplayTech",
+      "manufacturer": { "@id": "https://shop.example/brands/displaytech" },
+      "category": [
+        { "@id": "https://shop.example/categories/electronics" },
+        { "@id": "https://shop.example/categories/displays" }
+      ],
+      "relatedTo": [
+        "https://shop.example/products/laptop-pro",
+        "https://shop.example/products/monitor-stand"
+      ]
+    },
+    {
+      "@id": "https://shop.example/products/monitor-stand",
+      "@type": "Product",
+      "name": "Adjustable Monitor Stand",
+      "description": "Ergonomic stand with height and tilt adjustment",
+      "price": 89.99,
+      "priceCurrency": "USD",
+      "brand": "AccessoryPlus",
+      "manufacturer": { "@id": "https://shop.example/brands/accessoryplus" },
+      "category": [{ "@id": "https://shop.example/categories/accessories" }],
+      "relatedTo": ["https://shop.example/products/monitor-4k"]
+    },
+    {
+      "@id": "https://shop.example/products/webcam-hd",
+      "@type": "Product",
+      "name": "HD Webcam Pro",
+      "description": "1080p webcam with auto-focus and noise cancellation",
+      "price": 99.99,
+      "priceCurrency": "USD",
+      "brand": "TechCorp",
+      "manufacturer": { "@id": "https://shop.example/brands/techcorp" },
+      "category": [
+        { "@id": "https://shop.example/categories/electronics" },
+        { "@id": "https://shop.example/categories/accessories" }
+      ],
+      "relatedTo": [
+        "https://shop.example/products/laptop-pro",
+        "https://shop.example/products/monitor-4k"
+      ]
+    },
+    {
+      "@id": "https://shop.example/brands/techcorp",
+      "@type": "Organization",
+      "name": "TechCorp",
+      "description": "Leading technology manufacturer"
+    },
+    {
+      "@id": "https://shop.example/brands/accessoryplus",
+      "@type": "Organization",
+      "name": "AccessoryPlus",
+      "description": "Premium accessories manufacturer"
+    },
+    {
+      "@id": "https://shop.example/brands/displaytech",
+      "@type": "Organization",
+      "name": "DisplayTech",
+      "description": "Professional display solutions"
+    },
+    {
+      "@id": "https://shop.example/categories/electronics",
+      "@type": "Category",
+      "name": "Electronics"
+    },
+    {
+      "@id": "https://shop.example/categories/computers",
+      "@type": "Category",
+      "name": "Computers",
+      "partOf": { "@id": "https://shop.example/categories/electronics" }
+    },
+    {
+      "@id": "https://shop.example/categories/accessories",
+      "@type": "Category",
+      "name": "Accessories"
+    },
+    {
+      "@id": "https://shop.example/categories/displays",
+      "@type": "Category",
+      "name": "Displays",
+      "partOf": { "@id": "https://shop.example/categories/electronics" }
+    }
+  ]
+}

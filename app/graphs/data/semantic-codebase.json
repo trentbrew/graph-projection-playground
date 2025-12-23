@@ -1,0 +1,213 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "code": "https://example.org/code#",
+    "ui": "https://example.org/ui#",
+    "sec": "https://example.org/security#",
+    "ops": "https://example.org/ops#",
+    "rel": "https://example.org/relations#",
+    "expr": "https://example.org/expr#",
+    "state": "https://example.org/state#",
+    "function": "https://example.org/function#",
+    "event": "https://example.org/event#",
+    "policy": "https://example.org/policy#",
+    "data": "https://example.org/data#"
+  },
+
+  "@id": "code:repo",
+  "@type": "SoftwareSourceCode",
+  "name": "Hypermedia-First Commerce Platform",
+  "description": "A fully declarative, graph-native application where UI, state, logic, policy, and operations are projections over linked data.",
+  "programmingLanguage": "JSON-LD",
+  "runtimePlatform": "Semantic Resolver VM",
+  "codeRepository": "code:repo.git",
+  "license": "https://opensource.org/licenses/MIT",
+
+  "hasPart": [
+    {
+      "@id": "code:module/runtime",
+      "@type": "SoftwareModule",
+      "name": "Semantic Runtime",
+      "description": "Execution substrate responsible for graph resolution, expression evaluation, policy enforcement, and event propagation.",
+
+      "hasPart": [
+        {
+          "@id": "code:class/GraphStore",
+          "@type": "Class",
+          "name": "GraphStore",
+          "description": "Immutable-by-default linked data store with versioned snapshots.",
+          "hasMethod": [
+            {
+              "@id": "code:function/match",
+              "@type": "Function",
+              "name": "match",
+              "function:signature": "match(subject, predicate, object?) -> Set<Triple>",
+              "function:logic": "Pattern-match triples with structural sharing."
+            },
+            {
+              "@id": "code:function/commit",
+              "@type": "Function",
+              "name": "commit",
+              "function:signature": "commit(delta) -> graphVersion",
+              "function:logic": "Apply validated mutations, produce new graph snapshot."
+            }
+          ]
+        },
+        {
+          "@id": "code:class/Resolver",
+          "@type": "Class",
+          "name": "SemanticResolver",
+          "description": "Transforms graph nodes into agent-specific projections.",
+          "hasMethod": {
+            "@id": "code:function/resolve",
+            "@type": "Function",
+            "name": "resolve",
+            "function:signature": "resolve(node, agentContext) -> projection",
+            "function:logic": "Apply capability filters, policies, and view schemas."
+          }
+        },
+        {
+          "@id": "code:class/ExpressionEngine",
+          "@type": "Class",
+          "name": "ExpressionEngine",
+          "description": "Deterministic, sandboxed evaluator for declarative expressions.",
+          "hasMethod": {
+            "@id": "code:function/evaluate",
+            "@type": "Function",
+            "name": "evaluate",
+            "function:signature": "evaluate(exprAST, bindings) -> value",
+            "function:logic": "Pure evaluation over immutable bindings; no side effects."
+          }
+        },
+        {
+          "@id": "code:class/EventBus",
+          "@type": "Class",
+          "name": "EventBus",
+          "description": "Causal event stream derived from graph mutations.",
+          "hasMethod": {
+            "@id": "code:function/emit",
+            "@type": "Function",
+            "name": "emit",
+            "function:signature": "emit(event) -> void",
+            "function:logic": "Append-only log; triggers reactive projections."
+          }
+        }
+      ]
+    },
+    {
+      "@id": "code:module/security",
+      "@type": "SoftwareModule",
+      "name": "Security & Policy",
+      "description": "Capability-based authorization and declarative policy enforcement.",
+
+      "hasPart": [
+        {
+          "@id": "sec:capability/AuthenticatedAgent",
+          "@type": "DefinedTerm",
+          "name": "AuthenticatedAgent",
+          "description": "Agent possesses a valid cryptographic identity proof."
+        },
+        {
+          "@id": "sec:capability/CanPurchase",
+          "@type": "DefinedTerm",
+          "name": "CanPurchase",
+          "description": "Agent is permitted to create purchase-related graph mutations."
+        },
+        {
+          "@id": "policy:rule/PurchasePolicy",
+          "@type": "CreativeWork",
+          "name": "PurchasePolicy",
+          "policy:requires": ["sec:capability/AuthenticatedAgent"],
+          "policy:permits": "event:PurchaseInitiated",
+          "policy:logic": "deny if inventory.available == false"
+        }
+      ]
+    },
+    {
+      "@id": "code:module/domain",
+      "@type": "SoftwareModule",
+      "name": "Commerce Domain Model",
+      "description": "Canonical business entities expressed as graph-native classes.",
+
+      "hasPart": [
+        {
+          "@id": "data:class/Product",
+          "@type": "Class",
+          "name": "Product",
+          "properties": {
+            "name": "Text",
+            "price": "Number",
+            "currency": "Text",
+            "inventory": "Number"
+          }
+        },
+        {
+          "@id": "data:class/Cart",
+          "@type": "Class",
+          "name": "Cart",
+          "description": "Ephemeral relationship node between agent and products."
+        },
+        {
+          "@id": "data:class/Order",
+          "@type": "Class",
+          "name": "Order",
+          "properties": {
+            "status": "Text",
+            "createdAt": "DateTime",
+            "total": "Number"
+          }
+        }
+      ]
+    },
+    {
+      "@id": "code:module/ui",
+      "@type": "SoftwareModule",
+      "name": "UI Projections",
+      "description": "Agent-facing views derived entirely from semantic state.",
+
+      "hasPart": [
+        {
+          "@id": "ui:view/ProductList",
+          "@type": "UIComponent",
+          "ui:query": {
+            "expr:logic": "graph.match(?p, '@type', 'Product')"
+          },
+          "ui:render": "ListView"
+        },
+        {
+          "@id": "ui:view/CartView",
+          "@type": "UIComponent",
+          "ui:query": {
+            "expr:logic": "graph.match(agent, 'rel:contains', ?item)"
+          },
+          "ui:computed": {
+            "total": {
+              "expr:logic": "sum(items.map(i => i.price))"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "@id": "code:module/operations",
+      "@type": "SoftwareModule",
+      "name": "Operations & Lifecycle",
+      "description": "Build, validation, deployment, and replication workflows.",
+
+      "hasPart": [
+        {
+          "@id": "ops:action/Validate",
+          "@type": "Action",
+          "name": "Validate",
+          "function:logic": "Schema-check graph, policies, and expressions."
+        },
+        {
+          "@id": "ops:action/Deploy",
+          "@type": "Action",
+          "name": "Deploy",
+          "function:logic": "Replicate signed graph snapshots to edge resolvers."
+        }
+      ]
+    }
+  ]
+}

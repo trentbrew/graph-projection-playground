@@ -1,0 +1,285 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "tri": "https://example.org/tri#",
+    "epa": "https://www.epa.gov/toxics-release-inventory#",
+    "reports": {
+      "@id": "tri:reports",
+      "@type": "@id"
+    },
+    "releases": {
+      "@id": "tri:releases",
+      "@type": "@id"
+    },
+    "chemical": {
+      "@id": "tri:chemical",
+      "@type": "@id"
+    },
+    "facility": {
+      "@id": "tri:facility",
+      "@type": "@id"
+    },
+    "regulatedBy": {
+      "@id": "tri:regulatedBy",
+      "@type": "@id"
+    },
+    "submittedTo": {
+      "@id": "tri:submittedTo",
+      "@type": "@id"
+    },
+    "parentCompany": {
+      "@id": "tri:parentCompany",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "tri:company/nucor",
+      "@type": "Organization",
+      "name": "Nucor Corporation",
+      "url": "https://nucor.com/",
+      "description": "American steel production company",
+      "industry": "Steel Manufacturing",
+      "headquarters": "Charlotte, NC",
+      "naicsCode": "331110"
+    },
+    {
+      "@id": "tri:facility/nucor-berkeley",
+      "@type": "tri:Facility",
+      "name": "Nucor Steel Berkeley",
+      "facilityId": "29464NCRST1HGHW",
+      "address": "4900 Goose Creek Blvd, Huger, SC 29450",
+      "county": "Berkeley County",
+      "state": "SC",
+      "latitude": 33.0547,
+      "longitude": -79.9547,
+      "parentCompany": { "@id": "tri:company/nucor" },
+      "industryType": "Steel Mills",
+      "naicsCode": "331110",
+      "reports": [{ "@id": "tri:report/2024-berkeley" }]
+    },
+    {
+      "@id": "tri:facility/nucor-hertford",
+      "@type": "tri:Facility",
+      "name": "Nucor Steel Hertford County",
+      "facilityId": "27944NCRST100CO",
+      "address": "4200 US Highway 13 South, Cofield, NC 27922",
+      "county": "Hertford County",
+      "state": "NC",
+      "latitude": 36.3547,
+      "longitude": -76.9547,
+      "parentCompany": { "@id": "tri:company/nucor" },
+      "industryType": "Steel Mills",
+      "naicsCode": "331110",
+      "reports": [{ "@id": "tri:report/2024-hertford" }]
+    },
+    {
+      "@id": "tri:report/2024-berkeley",
+      "@type": "tri:Report",
+      "name": "2024 TRI Report - Nucor Berkeley",
+      "reportingYear": 2024,
+      "submissionDate": "2024-07-01",
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "submittedTo": { "@id": "tri:agency/epa" },
+      "releases": [
+        { "@id": "tri:release/berkeley-manganese" },
+        { "@id": "tri:release/berkeley-zinc" },
+        { "@id": "tri:release/berkeley-chromium" },
+        { "@id": "tri:release/berkeley-nickel" }
+      ]
+    },
+    {
+      "@id": "tri:report/2024-hertford",
+      "@type": "tri:Report",
+      "name": "2024 TRI Report - Nucor Hertford",
+      "reportingYear": 2024,
+      "submissionDate": "2024-07-01",
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "submittedTo": { "@id": "tri:agency/epa" },
+      "releases": [
+        { "@id": "tri:release/hertford-manganese" },
+        { "@id": "tri:release/hertford-zinc" },
+        { "@id": "tri:release/hertford-lead" }
+      ]
+    },
+    {
+      "@id": "tri:release/berkeley-manganese",
+      "@type": "tri:Release",
+      "name": "Manganese Release - Berkeley 2024",
+      "chemical": { "@id": "tri:chemical/manganese" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "totalReleases": 45600,
+      "unit": "pounds",
+      "airEmissions": 12300,
+      "waterDischarges": 8900,
+      "landDisposal": 24400,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:release/berkeley-zinc",
+      "@type": "tri:Release",
+      "name": "Zinc Release - Berkeley 2024",
+      "chemical": { "@id": "tri:chemical/zinc" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "totalReleases": 32100,
+      "unit": "pounds",
+      "airEmissions": 8700,
+      "waterDischarges": 6200,
+      "landDisposal": 17200,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:release/berkeley-chromium",
+      "@type": "tri:Release",
+      "name": "Chromium Release - Berkeley 2024",
+      "chemical": { "@id": "tri:chemical/chromium" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "totalReleases": 18900,
+      "unit": "pounds",
+      "airEmissions": 5100,
+      "waterDischarges": 4200,
+      "landDisposal": 9600,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:release/berkeley-nickel",
+      "@type": "tri:Release",
+      "name": "Nickel Release - Berkeley 2024",
+      "chemical": { "@id": "tri:chemical/nickel" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "totalReleases": 15400,
+      "unit": "pounds",
+      "airEmissions": 4200,
+      "waterDischarges": 3500,
+      "landDisposal": 7700,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:release/hertford-manganese",
+      "@type": "tri:Release",
+      "name": "Manganese Release - Hertford 2024",
+      "chemical": { "@id": "tri:chemical/manganese" },
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "totalReleases": 38200,
+      "unit": "pounds",
+      "airEmissions": 10500,
+      "waterDischarges": 7400,
+      "landDisposal": 20300,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:release/hertford-zinc",
+      "@type": "tri:Release",
+      "name": "Zinc Release - Hertford 2024",
+      "chemical": { "@id": "tri:chemical/zinc" },
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "totalReleases": 27800,
+      "unit": "pounds",
+      "airEmissions": 7600,
+      "waterDischarges": 5300,
+      "landDisposal": 14900,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:release/hertford-lead",
+      "@type": "tri:Release",
+      "name": "Lead Release - Hertford 2024",
+      "chemical": { "@id": "tri:chemical/lead" },
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "totalReleases": 12600,
+      "unit": "pounds",
+      "airEmissions": 3400,
+      "waterDischarges": 2800,
+      "landDisposal": 6400,
+      "releaseType": "On-site"
+    },
+    {
+      "@id": "tri:chemical/manganese",
+      "@type": "tri:Chemical",
+      "name": "Manganese and Manganese Compounds",
+      "casNumber": "7439-96-5",
+      "classification": "Metal",
+      "healthEffects": "Neurological effects, respiratory irritation",
+      "regulatedBy": { "@id": "tri:agency/epa" }
+    },
+    {
+      "@id": "tri:chemical/zinc",
+      "@type": "tri:Chemical",
+      "name": "Zinc and Zinc Compounds",
+      "casNumber": "7440-66-6",
+      "classification": "Metal",
+      "healthEffects": "Gastrointestinal effects, metal fume fever",
+      "regulatedBy": { "@id": "tri:agency/epa" }
+    },
+    {
+      "@id": "tri:chemical/chromium",
+      "@type": "tri:Chemical",
+      "name": "Chromium and Chromium Compounds",
+      "casNumber": "7440-47-3",
+      "classification": "Metal",
+      "healthEffects": "Respiratory effects, skin irritation, carcinogenic",
+      "regulatedBy": { "@id": "tri:agency/epa" }
+    },
+    {
+      "@id": "tri:chemical/nickel",
+      "@type": "tri:Chemical",
+      "name": "Nickel and Nickel Compounds",
+      "casNumber": "7440-02-0",
+      "classification": "Metal",
+      "healthEffects": "Respiratory effects, skin allergies, carcinogenic",
+      "regulatedBy": { "@id": "tri:agency/epa" }
+    },
+    {
+      "@id": "tri:chemical/lead",
+      "@type": "tri:Chemical",
+      "name": "Lead and Lead Compounds",
+      "casNumber": "7439-92-1",
+      "classification": "Metal",
+      "healthEffects": "Neurological damage, kidney damage, reproductive effects",
+      "regulatedBy": { "@id": "tri:agency/epa" }
+    },
+    {
+      "@id": "tri:agency/epa",
+      "@type": "GovernmentOrganization",
+      "name": "U.S. Environmental Protection Agency",
+      "abbreviation": "EPA",
+      "url": "https://www.epa.gov/",
+      "description": "Federal agency responsible for environmental protection",
+      "program": "Toxics Release Inventory (TRI) Program"
+    },
+    {
+      "@id": "tri:regulation/epcra-section-313",
+      "@type": "tri:Regulation",
+      "name": "EPCRA Section 313",
+      "description": "Emergency Planning and Community Right-to-Know Act Section 313",
+      "authority": { "@id": "tri:agency/epa" },
+      "requiresReporting": true,
+      "reportingThreshold": 25000,
+      "thresholdUnit": "pounds"
+    },
+    {
+      "@id": "tri:wasteManagement/recycling",
+      "@type": "tri:WasteManagement",
+      "name": "On-site Recycling",
+      "description": "Recovery and reuse of metal compounds",
+      "method": "Recycling",
+      "location": "On-site"
+    },
+    {
+      "@id": "tri:wasteManagement/treatment",
+      "@type": "tri:WasteManagement",
+      "name": "Wastewater Treatment",
+      "description": "Treatment of process water before discharge",
+      "method": "Treatment",
+      "location": "On-site"
+    },
+    {
+      "@id": "tri:wasteManagement/landfill",
+      "@type": "tri:WasteManagement",
+      "name": "Secure Landfill Disposal",
+      "description": "Disposal in permitted hazardous waste landfill",
+      "method": "Land Disposal",
+      "location": "Off-site"
+    }
+  ]
+}

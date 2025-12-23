@@ -1,0 +1,166 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "knows": "foaf:knows",
+    "follows": {
+      "@id": "https://www.w3.org/ns/activitystreams#Follow",
+      "@type": "@id"
+    },
+    "memberOf": {
+      "@id": "https://schema.org/memberOf",
+      "@type": "@id"
+    },
+    "interests": "https://schema.org/knowsAbout",
+    "location": "https://schema.org/location"
+  },
+  "@graph": [
+    {
+      "@id": "https://social.example/users/alice",
+      "@type": "Person",
+      "name": "Alice Johnson",
+      "email": "alice@example.com",
+      "location": "San Francisco, CA",
+      "interests": ["AI", "Machine Learning", "Open Source"],
+      "knows": [
+        { "@id": "https://social.example/users/bob" },
+        { "@id": "https://social.example/users/carol" }
+      ],
+      "follows": [
+        "https://social.example/users/bob",
+        "https://social.example/users/carol",
+        "https://social.example/users/david"
+      ],
+      "memberOf": [
+        { "@id": "https://social.example/groups/ai-enthusiasts" },
+        { "@id": "https://social.example/groups/open-source" }
+      ]
+    },
+    {
+      "@id": "https://social.example/users/bob",
+      "@type": "Person",
+      "name": "Bob Smith",
+      "email": "bob@example.com",
+      "location": "New York, NY",
+      "interests": ["Web Development", "JavaScript", "React"],
+      "knows": [
+        { "@id": "https://social.example/users/alice" },
+        { "@id": "https://social.example/users/david" }
+      ],
+      "follows": [
+        "https://social.example/users/alice",
+        "https://social.example/users/eve"
+      ],
+      "memberOf": [
+        { "@id": "https://social.example/groups/web-dev" },
+        { "@id": "https://social.example/groups/open-source" }
+      ]
+    },
+    {
+      "@id": "https://social.example/users/carol",
+      "@type": "Person",
+      "name": "Carol Williams",
+      "email": "carol@example.com",
+      "location": "Austin, TX",
+      "interests": ["Data Science", "Python", "Visualization"],
+      "knows": [
+        { "@id": "https://social.example/users/alice" },
+        { "@id": "https://social.example/users/eve" }
+      ],
+      "follows": [
+        "https://social.example/users/alice",
+        "https://social.example/users/david",
+        "https://social.example/users/eve"
+      ],
+      "memberOf": [{ "@id": "https://social.example/groups/data-science" }]
+    },
+    {
+      "@id": "https://social.example/users/david",
+      "@type": "Person",
+      "name": "David Chen",
+      "email": "david@example.com",
+      "location": "Seattle, WA",
+      "interests": ["Cloud Computing", "DevOps", "Kubernetes"],
+      "knows": [
+        { "@id": "https://social.example/users/bob" },
+        { "@id": "https://social.example/users/eve" }
+      ],
+      "follows": [
+        "https://social.example/users/bob",
+        "https://social.example/users/carol"
+      ],
+      "memberOf": [
+        { "@id": "https://social.example/groups/devops" },
+        { "@id": "https://social.example/groups/cloud" }
+      ]
+    },
+    {
+      "@id": "https://social.example/users/eve",
+      "@type": "Person",
+      "name": "Eve Martinez",
+      "email": "eve@example.com",
+      "location": "Los Angeles, CA",
+      "interests": ["UX Design", "Accessibility", "Design Systems"],
+      "knows": [
+        { "@id": "https://social.example/users/carol" },
+        { "@id": "https://social.example/users/david" }
+      ],
+      "follows": [
+        "https://social.example/users/alice",
+        "https://social.example/users/carol"
+      ],
+      "memberOf": [
+        { "@id": "https://social.example/groups/ux-design" },
+        { "@id": "https://social.example/groups/accessibility" }
+      ]
+    },
+    {
+      "@id": "https://social.example/groups/ai-enthusiasts",
+      "@type": "Organization",
+      "name": "AI Enthusiasts",
+      "description": "Community for AI and machine learning practitioners"
+    },
+    {
+      "@id": "https://social.example/groups/web-dev",
+      "@type": "Organization",
+      "name": "Web Developers",
+      "description": "Modern web development community"
+    },
+    {
+      "@id": "https://social.example/groups/data-science",
+      "@type": "Organization",
+      "name": "Data Science Hub",
+      "description": "Data analysis and visualization community"
+    },
+    {
+      "@id": "https://social.example/groups/devops",
+      "@type": "Organization",
+      "name": "DevOps Engineers",
+      "description": "Infrastructure and automation community"
+    },
+    {
+      "@id": "https://social.example/groups/cloud",
+      "@type": "Organization",
+      "name": "Cloud Computing",
+      "description": "Cloud architecture and services"
+    },
+    {
+      "@id": "https://social.example/groups/ux-design",
+      "@type": "Organization",
+      "name": "UX Designers",
+      "description": "User experience and interface design"
+    },
+    {
+      "@id": "https://social.example/groups/accessibility",
+      "@type": "Organization",
+      "name": "Accessibility Advocates",
+      "description": "Making the web accessible to everyone"
+    },
+    {
+      "@id": "https://social.example/groups/open-source",
+      "@type": "Organization",
+      "name": "Open Source Contributors",
+      "description": "Building and maintaining open source projects"
+    }
+  ]
+}

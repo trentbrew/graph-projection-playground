@@ -1,0 +1,202 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "bibo": "http://purl.org/ontology/bibo/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "author": {
+      "@id": "https://schema.org/author",
+      "@type": "@id"
+    },
+    "cites": {
+      "@id": "bibo:cites",
+      "@type": "@id"
+    },
+    "citedBy": {
+      "@id": "bibo:citedBy",
+      "@type": "@id"
+    },
+    "affiliation": {
+      "@id": "https://schema.org/affiliation",
+      "@type": "@id"
+    },
+    "publishedIn": {
+      "@id": "bibo:presentedAt",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "https://research.example/papers/neural-networks-2024",
+      "@type": "ScholarlyArticle",
+      "name": "Advances in Neural Network Architectures",
+      "abstract": "A comprehensive survey of recent developments in deep learning architectures",
+      "datePublished": "2024-03-15",
+      "author": [
+        { "@id": "https://research.example/authors/dr-smith" },
+        { "@id": "https://research.example/authors/dr-jones" }
+      ],
+      "cites": [
+        "https://research.example/papers/transformers-2023",
+        "https://research.example/papers/attention-mechanisms"
+      ],
+      "publishedIn": {
+        "@id": "https://research.example/conferences/ai-conf-2024"
+      }
+    },
+    {
+      "@id": "https://research.example/papers/transformers-2023",
+      "@type": "ScholarlyArticle",
+      "name": "Transformer Models: A Deep Dive",
+      "abstract": "Exploring the architecture and applications of transformer models",
+      "datePublished": "2023-11-20",
+      "author": [
+        { "@id": "https://research.example/authors/dr-jones" },
+        { "@id": "https://research.example/authors/dr-chen" }
+      ],
+      "cites": ["https://research.example/papers/attention-mechanisms"],
+      "citedBy": ["https://research.example/papers/neural-networks-2024"],
+      "publishedIn": { "@id": "https://research.example/journals/ml-journal" }
+    },
+    {
+      "@id": "https://research.example/papers/attention-mechanisms",
+      "@type": "ScholarlyArticle",
+      "name": "Attention Is All You Need: Revisited",
+      "abstract": "A retrospective analysis of attention mechanisms in modern AI",
+      "datePublished": "2023-06-10",
+      "author": [{ "@id": "https://research.example/authors/dr-chen" }],
+      "citedBy": [
+        "https://research.example/papers/neural-networks-2024",
+        "https://research.example/papers/transformers-2023",
+        "https://research.example/papers/nlp-applications"
+      ],
+      "publishedIn": { "@id": "https://research.example/journals/ai-review" }
+    },
+    {
+      "@id": "https://research.example/papers/nlp-applications",
+      "@type": "ScholarlyArticle",
+      "name": "Natural Language Processing in Healthcare",
+      "abstract": "Applications of NLP techniques in medical diagnosis and treatment",
+      "datePublished": "2024-01-08",
+      "author": [
+        { "@id": "https://research.example/authors/dr-patel" },
+        { "@id": "https://research.example/authors/dr-smith" }
+      ],
+      "cites": [
+        "https://research.example/papers/attention-mechanisms",
+        "https://research.example/papers/transformers-2023"
+      ],
+      "publishedIn": { "@id": "https://research.example/journals/health-ai" }
+    },
+    {
+      "@id": "https://research.example/papers/computer-vision",
+      "@type": "ScholarlyArticle",
+      "name": "Computer Vision for Autonomous Systems",
+      "abstract": "Deep learning approaches for real-time object detection and tracking",
+      "datePublished": "2024-02-14",
+      "author": [
+        { "@id": "https://research.example/authors/dr-garcia" },
+        { "@id": "https://research.example/authors/dr-jones" }
+      ],
+      "cites": ["https://research.example/papers/neural-networks-2024"],
+      "publishedIn": {
+        "@id": "https://research.example/conferences/robotics-2024"
+      }
+    },
+    {
+      "@id": "https://research.example/authors/dr-smith",
+      "@type": "Person",
+      "name": "Dr. Sarah Smith",
+      "jobTitle": "Professor of Computer Science",
+      "affiliation": {
+        "@id": "https://research.example/institutions/tech-university"
+      }
+    },
+    {
+      "@id": "https://research.example/authors/dr-jones",
+      "@type": "Person",
+      "name": "Dr. Michael Jones",
+      "jobTitle": "Associate Professor of AI",
+      "affiliation": {
+        "@id": "https://research.example/institutions/tech-university"
+      }
+    },
+    {
+      "@id": "https://research.example/authors/dr-chen",
+      "@type": "Person",
+      "name": "Dr. Wei Chen",
+      "jobTitle": "Research Scientist",
+      "affiliation": { "@id": "https://research.example/institutions/ai-lab" }
+    },
+    {
+      "@id": "https://research.example/authors/dr-patel",
+      "@type": "Person",
+      "name": "Dr. Priya Patel",
+      "jobTitle": "Senior Researcher",
+      "affiliation": {
+        "@id": "https://research.example/institutions/medical-center"
+      }
+    },
+    {
+      "@id": "https://research.example/authors/dr-garcia",
+      "@type": "Person",
+      "name": "Dr. Carlos Garcia",
+      "jobTitle": "Assistant Professor",
+      "affiliation": {
+        "@id": "https://research.example/institutions/robotics-institute"
+      }
+    },
+    {
+      "@id": "https://research.example/institutions/tech-university",
+      "@type": "CollegeOrUniversity",
+      "name": "Tech University",
+      "description": "Leading research university in computer science"
+    },
+    {
+      "@id": "https://research.example/institutions/ai-lab",
+      "@type": "ResearchOrganization",
+      "name": "Advanced AI Research Lab",
+      "description": "Cutting-edge AI research facility"
+    },
+    {
+      "@id": "https://research.example/institutions/medical-center",
+      "@type": "MedicalOrganization",
+      "name": "Medical AI Research Center",
+      "description": "Healthcare and AI research center"
+    },
+    {
+      "@id": "https://research.example/institutions/robotics-institute",
+      "@type": "ResearchOrganization",
+      "name": "Robotics Research Institute",
+      "description": "Autonomous systems and robotics research"
+    },
+    {
+      "@id": "https://research.example/conferences/ai-conf-2024",
+      "@type": "Event",
+      "name": "International AI Conference 2024",
+      "startDate": "2024-03-10",
+      "endDate": "2024-03-15"
+    },
+    {
+      "@id": "https://research.example/conferences/robotics-2024",
+      "@type": "Event",
+      "name": "Robotics and Automation Conference 2024",
+      "startDate": "2024-02-10",
+      "endDate": "2024-02-14"
+    },
+    {
+      "@id": "https://research.example/journals/ml-journal",
+      "@type": "Periodical",
+      "name": "Journal of Machine Learning Research"
+    },
+    {
+      "@id": "https://research.example/journals/ai-review",
+      "@type": "Periodical",
+      "name": "AI Review Quarterly"
+    },
+    {
+      "@id": "https://research.example/journals/health-ai",
+      "@type": "Periodical",
+      "name": "Healthcare AI Journal"
+    }
+  ]
+}

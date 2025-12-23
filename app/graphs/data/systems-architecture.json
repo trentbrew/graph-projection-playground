@@ -1,0 +1,289 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "sys": "https://example.org/systems#",
+    "dependsOn": {
+      "@id": "sys:dependsOn",
+      "@type": "@id"
+    },
+    "communicatesWith": {
+      "@id": "sys:communicatesWith",
+      "@type": "@id"
+    },
+    "deployedOn": {
+      "@id": "sys:deployedOn",
+      "@type": "@id"
+    },
+    "stores": {
+      "@id": "sys:stores",
+      "@type": "@id"
+    },
+    "monitors": {
+      "@id": "sys:monitors",
+      "@type": "@id"
+    },
+    "authenticates": {
+      "@id": "sys:authenticates",
+      "@type": "@id"
+    },
+    "caches": {
+      "@id": "sys:caches",
+      "@type": "@id"
+    },
+    "queues": {
+      "@id": "sys:queues",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "sys:system/e-commerce-platform",
+      "@type": "sys:System",
+      "name": "E-Commerce Platform",
+      "description": "Microservices-based e-commerce system",
+      "architecture": "Microservices",
+      "hasPart": [
+        { "@id": "sys:service/api-gateway" },
+        { "@id": "sys:service/auth" },
+        { "@id": "sys:service/catalog" },
+        { "@id": "sys:service/cart" },
+        { "@id": "sys:service/order" },
+        { "@id": "sys:service/payment" },
+        { "@id": "sys:service/notification" }
+      ]
+    },
+    {
+      "@id": "sys:service/api-gateway",
+      "@type": "sys:Service",
+      "name": "API Gateway",
+      "description": "Entry point for all client requests",
+      "port": 443,
+      "protocol": "HTTPS",
+      "technology": "Kong",
+      "communicatesWith": [
+        { "@id": "sys:service/auth" },
+        { "@id": "sys:service/catalog" },
+        { "@id": "sys:service/cart" },
+        { "@id": "sys:service/order" }
+      ],
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/auth",
+      "@type": "sys:Service",
+      "name": "Authentication Service",
+      "description": "User authentication and authorization",
+      "port": 8080,
+      "protocol": "HTTP",
+      "technology": "Node.js + JWT",
+      "stores": { "@id": "sys:db/users" },
+      "caches": { "@id": "sys:cache/sessions" },
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/catalog",
+      "@type": "sys:Service",
+      "name": "Product Catalog Service",
+      "description": "Product information and search",
+      "port": 8081,
+      "protocol": "HTTP",
+      "technology": "Python + FastAPI",
+      "stores": { "@id": "sys:db/products" },
+      "caches": { "@id": "sys:cache/catalog" },
+      "dependsOn": { "@id": "sys:service/search" },
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/cart",
+      "@type": "sys:Service",
+      "name": "Shopping Cart Service",
+      "description": "Shopping cart management",
+      "port": 8082,
+      "protocol": "HTTP",
+      "technology": "Go",
+      "stores": { "@id": "sys:cache/sessions" },
+      "communicatesWith": { "@id": "sys:service/catalog" },
+      "authenticates": { "@id": "sys:service/auth" },
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/order",
+      "@type": "sys:Service",
+      "name": "Order Service",
+      "description": "Order processing and management",
+      "port": 8083,
+      "protocol": "HTTP",
+      "technology": "Java + Spring Boot",
+      "stores": { "@id": "sys:db/orders" },
+      "communicatesWith": [
+        { "@id": "sys:service/payment" },
+        { "@id": "sys:service/notification" }
+      ],
+      "queues": { "@id": "sys:queue/orders" },
+      "authenticates": { "@id": "sys:service/auth" },
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/payment",
+      "@type": "sys:Service",
+      "name": "Payment Service",
+      "description": "Payment processing integration",
+      "port": 8084,
+      "protocol": "HTTP",
+      "technology": "Node.js + Stripe SDK",
+      "stores": { "@id": "sys:db/transactions" },
+      "communicatesWith": { "@id": "sys:external/stripe" },
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/notification",
+      "@type": "sys:Service",
+      "name": "Notification Service",
+      "description": "Email and SMS notifications",
+      "port": 8085,
+      "protocol": "HTTP",
+      "technology": "Python + Celery",
+      "queues": { "@id": "sys:queue/notifications" },
+      "communicatesWith": [
+        { "@id": "sys:external/sendgrid" },
+        { "@id": "sys:external/twilio" }
+      ],
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:service/search",
+      "@type": "sys:Service",
+      "name": "Search Service",
+      "description": "Full-text product search",
+      "port": 9200,
+      "protocol": "HTTP",
+      "technology": "Elasticsearch",
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:db/users",
+      "@type": "sys:Database",
+      "name": "Users Database",
+      "technology": "PostgreSQL",
+      "purpose": "User accounts and profiles",
+      "deployedOn": { "@id": "sys:infra/rds" }
+    },
+    {
+      "@id": "sys:db/products",
+      "@type": "sys:Database",
+      "name": "Products Database",
+      "technology": "PostgreSQL",
+      "purpose": "Product catalog and inventory",
+      "deployedOn": { "@id": "sys:infra/rds" }
+    },
+    {
+      "@id": "sys:db/orders",
+      "@type": "sys:Database",
+      "name": "Orders Database",
+      "technology": "PostgreSQL",
+      "purpose": "Order history and tracking",
+      "deployedOn": { "@id": "sys:infra/rds" }
+    },
+    {
+      "@id": "sys:db/transactions",
+      "@type": "sys:Database",
+      "name": "Transactions Database",
+      "technology": "PostgreSQL",
+      "purpose": "Payment transactions and audit log",
+      "deployedOn": { "@id": "sys:infra/rds" }
+    },
+    {
+      "@id": "sys:cache/sessions",
+      "@type": "sys:Cache",
+      "name": "Session Cache",
+      "technology": "Redis",
+      "purpose": "User sessions and cart data",
+      "ttl": 3600,
+      "deployedOn": { "@id": "sys:infra/elasticache" }
+    },
+    {
+      "@id": "sys:cache/catalog",
+      "@type": "sys:Cache",
+      "name": "Catalog Cache",
+      "technology": "Redis",
+      "purpose": "Product data caching",
+      "ttl": 300,
+      "deployedOn": { "@id": "sys:infra/elasticache" }
+    },
+    {
+      "@id": "sys:queue/orders",
+      "@type": "sys:MessageQueue",
+      "name": "Order Queue",
+      "technology": "RabbitMQ",
+      "purpose": "Async order processing",
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:queue/notifications",
+      "@type": "sys:MessageQueue",
+      "name": "Notification Queue",
+      "technology": "RabbitMQ",
+      "purpose": "Async notification delivery",
+      "deployedOn": { "@id": "sys:infra/kubernetes" }
+    },
+    {
+      "@id": "sys:infra/kubernetes",
+      "@type": "sys:Infrastructure",
+      "name": "Kubernetes Cluster",
+      "provider": "AWS EKS",
+      "region": "us-east-1",
+      "monitors": { "@id": "sys:monitoring/prometheus" }
+    },
+    {
+      "@id": "sys:infra/rds",
+      "@type": "sys:Infrastructure",
+      "name": "RDS PostgreSQL",
+      "provider": "AWS RDS",
+      "region": "us-east-1",
+      "monitors": { "@id": "sys:monitoring/cloudwatch" }
+    },
+    {
+      "@id": "sys:infra/elasticache",
+      "@type": "sys:Infrastructure",
+      "name": "ElastiCache Redis",
+      "provider": "AWS ElastiCache",
+      "region": "us-east-1",
+      "monitors": { "@id": "sys:monitoring/cloudwatch" }
+    },
+    {
+      "@id": "sys:monitoring/prometheus",
+      "@type": "sys:Monitoring",
+      "name": "Prometheus",
+      "description": "Metrics collection and alerting",
+      "technology": "Prometheus + Grafana"
+    },
+    {
+      "@id": "sys:monitoring/cloudwatch",
+      "@type": "sys:Monitoring",
+      "name": "CloudWatch",
+      "description": "AWS infrastructure monitoring",
+      "technology": "AWS CloudWatch"
+    },
+    {
+      "@id": "sys:external/stripe",
+      "@type": "sys:ExternalService",
+      "name": "Stripe API",
+      "description": "Payment processing provider",
+      "url": "https://api.stripe.com"
+    },
+    {
+      "@id": "sys:external/sendgrid",
+      "@type": "sys:ExternalService",
+      "name": "SendGrid API",
+      "description": "Email delivery service",
+      "url": "https://api.sendgrid.com"
+    },
+    {
+      "@id": "sys:external/twilio",
+      "@type": "sys:ExternalService",
+      "name": "Twilio API",
+      "description": "SMS delivery service",
+      "url": "https://api.twilio.com"
+    }
+  ]
+}

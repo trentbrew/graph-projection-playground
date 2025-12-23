@@ -1,0 +1,245 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "fin": "https://example.org/finance#",
+    "holds": {
+      "@id": "fin:holds",
+      "@type": "@id"
+    },
+    "issuedBy": {
+      "@id": "fin:issuedBy",
+      "@type": "@id"
+    },
+    "sector": {
+      "@id": "fin:sector",
+      "@type": "@id"
+    },
+    "correlatesWith": {
+      "@id": "fin:correlatesWith",
+      "@type": "@id"
+    },
+    "hedges": {
+      "@id": "fin:hedges",
+      "@type": "@id"
+    },
+    "benchmarkedAgainst": {
+      "@id": "fin:benchmarkedAgainst",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "fin:portfolio/growth-2025",
+      "@type": "fin:Portfolio",
+      "name": "Growth Portfolio 2025",
+      "description": "Diversified growth-focused investment portfolio",
+      "totalValue": 250000,
+      "currency": "USD",
+      "riskLevel": "Moderate",
+      "holds": [
+        { "@id": "fin:position/aapl" },
+        { "@id": "fin:position/msft" },
+        { "@id": "fin:position/googl" },
+        { "@id": "fin:position/tsla" },
+        { "@id": "fin:position/vti" },
+        { "@id": "fin:position/bnd" }
+      ],
+      "benchmarkedAgainst": { "@id": "fin:index/sp500" }
+    },
+    {
+      "@id": "fin:position/aapl",
+      "@type": "fin:Position",
+      "name": "Apple Inc. Position",
+      "ticker": "AAPL",
+      "shares": 100,
+      "averageCost": 150.0,
+      "currentPrice": 185.0,
+      "marketValue": 18500,
+      "issuedBy": { "@id": "fin:company/apple" },
+      "sector": { "@id": "fin:sector/technology" }
+    },
+    {
+      "@id": "fin:position/msft",
+      "@type": "fin:Position",
+      "name": "Microsoft Corp. Position",
+      "ticker": "MSFT",
+      "shares": 75,
+      "averageCost": 280.0,
+      "currentPrice": 375.0,
+      "marketValue": 28125,
+      "issuedBy": { "@id": "fin:company/microsoft" },
+      "sector": { "@id": "fin:sector/technology" },
+      "correlatesWith": { "@id": "fin:position/aapl" }
+    },
+    {
+      "@id": "fin:position/googl",
+      "@type": "fin:Position",
+      "name": "Alphabet Inc. Position",
+      "ticker": "GOOGL",
+      "shares": 150,
+      "averageCost": 95.0,
+      "currentPrice": 140.0,
+      "marketValue": 21000,
+      "issuedBy": { "@id": "fin:company/alphabet" },
+      "sector": { "@id": "fin:sector/technology" },
+      "correlatesWith": { "@id": "fin:position/msft" }
+    },
+    {
+      "@id": "fin:position/tsla",
+      "@type": "fin:Position",
+      "name": "Tesla Inc. Position",
+      "ticker": "TSLA",
+      "shares": 50,
+      "averageCost": 200.0,
+      "currentPrice": 250.0,
+      "marketValue": 12500,
+      "issuedBy": { "@id": "fin:company/tesla" },
+      "sector": { "@id": "fin:sector/automotive" }
+    },
+    {
+      "@id": "fin:position/vti",
+      "@type": "fin:Position",
+      "name": "Vanguard Total Stock Market ETF",
+      "ticker": "VTI",
+      "shares": 500,
+      "averageCost": 220.0,
+      "currentPrice": 240.0,
+      "marketValue": 120000,
+      "issuedBy": { "@id": "fin:company/vanguard" },
+      "sector": { "@id": "fin:sector/diversified" },
+      "benchmarkedAgainst": { "@id": "fin:index/total-market" }
+    },
+    {
+      "@id": "fin:position/bnd",
+      "@type": "fin:Position",
+      "name": "Vanguard Total Bond Market ETF",
+      "ticker": "BND",
+      "shares": 500,
+      "averageCost": 75.0,
+      "currentPrice": 73.5,
+      "marketValue": 36750,
+      "issuedBy": { "@id": "fin:company/vanguard" },
+      "sector": { "@id": "fin:sector/fixed-income" },
+      "hedges": { "@id": "fin:position/vti" }
+    },
+    {
+      "@id": "fin:company/apple",
+      "@type": "Organization",
+      "name": "Apple Inc.",
+      "ticker": "AAPL",
+      "description": "Technology company specializing in consumer electronics",
+      "sector": { "@id": "fin:sector/technology" }
+    },
+    {
+      "@id": "fin:company/microsoft",
+      "@type": "Organization",
+      "name": "Microsoft Corporation",
+      "ticker": "MSFT",
+      "description": "Technology company providing software and cloud services",
+      "sector": { "@id": "fin:sector/technology" }
+    },
+    {
+      "@id": "fin:company/alphabet",
+      "@type": "Organization",
+      "name": "Alphabet Inc.",
+      "ticker": "GOOGL",
+      "description": "Technology conglomerate specializing in internet services",
+      "sector": { "@id": "fin:sector/technology" }
+    },
+    {
+      "@id": "fin:company/tesla",
+      "@type": "Organization",
+      "name": "Tesla Inc.",
+      "ticker": "TSLA",
+      "description": "Electric vehicle and clean energy company",
+      "sector": { "@id": "fin:sector/automotive" }
+    },
+    {
+      "@id": "fin:company/vanguard",
+      "@type": "Organization",
+      "name": "Vanguard Group",
+      "description": "Investment management company",
+      "sector": { "@id": "fin:sector/financial-services" }
+    },
+    {
+      "@id": "fin:sector/technology",
+      "@type": "fin:Sector",
+      "name": "Technology",
+      "description": "Technology and software companies"
+    },
+    {
+      "@id": "fin:sector/automotive",
+      "@type": "fin:Sector",
+      "name": "Automotive",
+      "description": "Automotive and transportation companies"
+    },
+    {
+      "@id": "fin:sector/diversified",
+      "@type": "fin:Sector",
+      "name": "Diversified",
+      "description": "Broad market exposure across sectors"
+    },
+    {
+      "@id": "fin:sector/fixed-income",
+      "@type": "fin:Sector",
+      "name": "Fixed Income",
+      "description": "Bonds and fixed-income securities"
+    },
+    {
+      "@id": "fin:sector/financial-services",
+      "@type": "fin:Sector",
+      "name": "Financial Services",
+      "description": "Banking and investment services"
+    },
+    {
+      "@id": "fin:index/sp500",
+      "@type": "fin:Index",
+      "name": "S&P 500",
+      "description": "Stock market index of 500 large US companies",
+      "ticker": "^GSPC"
+    },
+    {
+      "@id": "fin:index/total-market",
+      "@type": "fin:Index",
+      "name": "Total Stock Market",
+      "description": "Broad market index covering entire US equity market",
+      "ticker": "VTI"
+    },
+    {
+      "@id": "fin:transaction/buy-aapl-2024",
+      "@type": "fin:Transaction",
+      "name": "Buy AAPL",
+      "transactionType": "Buy",
+      "date": "2024-01-15",
+      "ticker": "AAPL",
+      "shares": 100,
+      "price": 150.0,
+      "total": 15000,
+      "position": { "@id": "fin:position/aapl" }
+    },
+    {
+      "@id": "fin:transaction/buy-msft-2024",
+      "@type": "fin:Transaction",
+      "name": "Buy MSFT",
+      "transactionType": "Buy",
+      "date": "2024-02-20",
+      "ticker": "MSFT",
+      "shares": 75,
+      "price": 280.0,
+      "total": 21000,
+      "position": { "@id": "fin:position/msft" }
+    },
+    {
+      "@id": "fin:transaction/buy-vti-2024",
+      "@type": "fin:Transaction",
+      "name": "Buy VTI",
+      "transactionType": "Buy",
+      "date": "2024-03-10",
+      "ticker": "VTI",
+      "shares": 500,
+      "price": 220.0,
+      "total": 110000,
+      "position": { "@id": "fin:position/vti" }
+    }
+  ]
+}

@@ -1,0 +1,237 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "org": "http://www.w3.org/ns/org#",
+    "reportsTo": {
+      "@id": "org:reportsTo",
+      "@type": "@id"
+    },
+    "manages": {
+      "@id": "org:manages",
+      "@type": "@id"
+    },
+    "memberOf": {
+      "@id": "org:memberOf",
+      "@type": "@id"
+    },
+    "subOrganizationOf": {
+      "@id": "org:subOrganizationOf",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "https://company.example/org/acme-corp",
+      "@type": "Organization",
+      "name": "Acme Corporation",
+      "description": "Global technology solutions provider",
+      "foundingDate": "2010-01-15"
+    },
+    {
+      "@id": "https://company.example/org/engineering",
+      "@type": "OrganizationRole",
+      "name": "Engineering Division",
+      "description": "Product development and engineering",
+      "subOrganizationOf": { "@id": "https://company.example/org/acme-corp" }
+    },
+    {
+      "@id": "https://company.example/org/product",
+      "@type": "OrganizationRole",
+      "name": "Product Division",
+      "description": "Product strategy and management",
+      "subOrganizationOf": { "@id": "https://company.example/org/acme-corp" }
+    },
+    {
+      "@id": "https://company.example/org/design",
+      "@type": "OrganizationRole",
+      "name": "Design Division",
+      "description": "User experience and visual design",
+      "subOrganizationOf": { "@id": "https://company.example/org/acme-corp" }
+    },
+    {
+      "@id": "https://company.example/org/frontend-team",
+      "@type": "OrganizationRole",
+      "name": "Frontend Team",
+      "description": "Web and mobile frontend development",
+      "subOrganizationOf": { "@id": "https://company.example/org/engineering" }
+    },
+    {
+      "@id": "https://company.example/org/backend-team",
+      "@type": "OrganizationRole",
+      "name": "Backend Team",
+      "description": "API and infrastructure development",
+      "subOrganizationOf": { "@id": "https://company.example/org/engineering" }
+    },
+    {
+      "@id": "https://company.example/org/platform-team",
+      "@type": "OrganizationRole",
+      "name": "Platform Team",
+      "description": "Internal tools and developer experience",
+      "subOrganizationOf": { "@id": "https://company.example/org/engineering" }
+    },
+    {
+      "@id": "https://company.example/people/ceo-jane",
+      "@type": "Person",
+      "name": "Jane Anderson",
+      "jobTitle": "Chief Executive Officer",
+      "memberOf": { "@id": "https://company.example/org/acme-corp" },
+      "manages": [
+        "https://company.example/people/vp-eng-tom",
+        "https://company.example/people/vp-product-lisa",
+        "https://company.example/people/vp-design-mark"
+      ]
+    },
+    {
+      "@id": "https://company.example/people/vp-eng-tom",
+      "@type": "Person",
+      "name": "Tom Wilson",
+      "jobTitle": "VP of Engineering",
+      "memberOf": { "@id": "https://company.example/org/engineering" },
+      "reportsTo": { "@id": "https://company.example/people/ceo-jane" },
+      "manages": [
+        "https://company.example/people/lead-frontend-sarah",
+        "https://company.example/people/lead-backend-james",
+        "https://company.example/people/lead-platform-maya"
+      ]
+    },
+    {
+      "@id": "https://company.example/people/vp-product-lisa",
+      "@type": "Person",
+      "name": "Lisa Chen",
+      "jobTitle": "VP of Product",
+      "memberOf": { "@id": "https://company.example/org/product" },
+      "reportsTo": { "@id": "https://company.example/people/ceo-jane" },
+      "manages": [
+        "https://company.example/people/pm-alex",
+        "https://company.example/people/pm-jordan"
+      ]
+    },
+    {
+      "@id": "https://company.example/people/vp-design-mark",
+      "@type": "Person",
+      "name": "Mark Rodriguez",
+      "jobTitle": "VP of Design",
+      "memberOf": { "@id": "https://company.example/org/design" },
+      "reportsTo": { "@id": "https://company.example/people/ceo-jane" },
+      "manages": [
+        "https://company.example/people/lead-ux-emma",
+        "https://company.example/people/lead-visual-ryan"
+      ]
+    },
+    {
+      "@id": "https://company.example/people/lead-frontend-sarah",
+      "@type": "Person",
+      "name": "Sarah Kim",
+      "jobTitle": "Frontend Team Lead",
+      "memberOf": { "@id": "https://company.example/org/frontend-team" },
+      "reportsTo": { "@id": "https://company.example/people/vp-eng-tom" },
+      "manages": [
+        "https://company.example/people/eng-frontend-1",
+        "https://company.example/people/eng-frontend-2"
+      ]
+    },
+    {
+      "@id": "https://company.example/people/lead-backend-james",
+      "@type": "Person",
+      "name": "James Taylor",
+      "jobTitle": "Backend Team Lead",
+      "memberOf": { "@id": "https://company.example/org/backend-team" },
+      "reportsTo": { "@id": "https://company.example/people/vp-eng-tom" },
+      "manages": [
+        "https://company.example/people/eng-backend-1",
+        "https://company.example/people/eng-backend-2"
+      ]
+    },
+    {
+      "@id": "https://company.example/people/lead-platform-maya",
+      "@type": "Person",
+      "name": "Maya Patel",
+      "jobTitle": "Platform Team Lead",
+      "memberOf": { "@id": "https://company.example/org/platform-team" },
+      "reportsTo": { "@id": "https://company.example/people/vp-eng-tom" },
+      "manages": ["https://company.example/people/eng-platform-1"]
+    },
+    {
+      "@id": "https://company.example/people/pm-alex",
+      "@type": "Person",
+      "name": "Alex Martinez",
+      "jobTitle": "Senior Product Manager",
+      "memberOf": { "@id": "https://company.example/org/product" },
+      "reportsTo": { "@id": "https://company.example/people/vp-product-lisa" }
+    },
+    {
+      "@id": "https://company.example/people/pm-jordan",
+      "@type": "Person",
+      "name": "Jordan Lee",
+      "jobTitle": "Product Manager",
+      "memberOf": { "@id": "https://company.example/org/product" },
+      "reportsTo": { "@id": "https://company.example/people/vp-product-lisa" }
+    },
+    {
+      "@id": "https://company.example/people/lead-ux-emma",
+      "@type": "Person",
+      "name": "Emma Davis",
+      "jobTitle": "UX Design Lead",
+      "memberOf": { "@id": "https://company.example/org/design" },
+      "reportsTo": { "@id": "https://company.example/people/vp-design-mark" }
+    },
+    {
+      "@id": "https://company.example/people/lead-visual-ryan",
+      "@type": "Person",
+      "name": "Ryan O'Brien",
+      "jobTitle": "Visual Design Lead",
+      "memberOf": { "@id": "https://company.example/org/design" },
+      "reportsTo": { "@id": "https://company.example/people/vp-design-mark" }
+    },
+    {
+      "@id": "https://company.example/people/eng-frontend-1",
+      "@type": "Person",
+      "name": "Sophie Zhang",
+      "jobTitle": "Senior Frontend Engineer",
+      "memberOf": { "@id": "https://company.example/org/frontend-team" },
+      "reportsTo": {
+        "@id": "https://company.example/people/lead-frontend-sarah"
+      }
+    },
+    {
+      "@id": "https://company.example/people/eng-frontend-2",
+      "@type": "Person",
+      "name": "Lucas Brown",
+      "jobTitle": "Frontend Engineer",
+      "memberOf": { "@id": "https://company.example/org/frontend-team" },
+      "reportsTo": {
+        "@id": "https://company.example/people/lead-frontend-sarah"
+      }
+    },
+    {
+      "@id": "https://company.example/people/eng-backend-1",
+      "@type": "Person",
+      "name": "Aisha Johnson",
+      "jobTitle": "Senior Backend Engineer",
+      "memberOf": { "@id": "https://company.example/org/backend-team" },
+      "reportsTo": {
+        "@id": "https://company.example/people/lead-backend-james"
+      }
+    },
+    {
+      "@id": "https://company.example/people/eng-backend-2",
+      "@type": "Person",
+      "name": "David Nguyen",
+      "jobTitle": "Backend Engineer",
+      "memberOf": { "@id": "https://company.example/org/backend-team" },
+      "reportsTo": {
+        "@id": "https://company.example/people/lead-backend-james"
+      }
+    },
+    {
+      "@id": "https://company.example/people/eng-platform-1",
+      "@type": "Person",
+      "name": "Nina Kowalski",
+      "jobTitle": "Platform Engineer",
+      "memberOf": { "@id": "https://company.example/org/platform-team" },
+      "reportsTo": {
+        "@id": "https://company.example/people/lead-platform-maya"
+      }
+    }
+  ]
+}
