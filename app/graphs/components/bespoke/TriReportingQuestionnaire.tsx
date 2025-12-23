@@ -43,6 +43,28 @@ type Question = {
   required?: boolean;
 };
 
+type QuestionnaireTemplate = {
+  id: string;
+  name: string;
+  version?: string;
+};
+
+type TemplateQuestion = {
+  id: string;
+  key: string;
+  label: string;
+  helper?: string;
+  answerType: QuestionType;
+  required?: boolean;
+};
+
+type TemplateSection = {
+  id: string;
+  name: string;
+  order?: number;
+  questionIds: string[];
+};
+
 function safeString(v: unknown): string {
   if (v === null || v === undefined) return '';
   return String(v);
@@ -121,6 +143,70 @@ export function TriReportingQuestionnaire({
     return t ?? 25000;
   }, [data.nodes]);
 
+  const questionnaireTemplate = useMemo<QuestionnaireTemplate | null>(() => {
+    const tpl = data.nodes.find((n) =>
+      n.type.toLowerCase().includes('questionnairetemplate'),
+    );
+    if (!tpl) return null;
+    return {
+      id: tpl.id,
+      name: safeString(tpl.label),
+      version: safeString(tpl.properties.version) || undefined,
+    };
+  }, [data.nodes]);
+
+  const templateSections = useMemo<TemplateSection[]>(() => {
+    const sections = data.nodes
+      .filter((n) => n.type.toLowerCase().includes('questionsection'))
+      .map((n) => {
+        const questionIds: string[] = (outgoing.get(n.id) ?? [])
+          .filter((e) => e.predicate === 'questions')
+          .map((e) => e.target);
+
+        return {
+          id: n.id,
+          name: safeString(n.label),
+          order: safeNumber(n.properties.order) ?? undefined,
+          questionIds,
+        };
+      })
+      .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+
+    return sections;
+  }, [data.nodes, outgoing]);
+
+  const templateQuestionsById = useMemo(() => {
+    const m = new Map<string, TemplateQuestion>();
+    for (const n of data.nodes) {
+      if (!n.type.toLowerCase().includes('question')) continue;
+
+      const key = safeString(n.properties.key);
+      const label = safeString(n.properties.label) || safeString(n.label);
+      const answerTypeRaw = safeString(n.properties.answerType);
+
+      const answerType: QuestionType =
+        answerTypeRaw === 'checkbox'
+          ? 'checkbox'
+          : answerTypeRaw === 'yesno'
+            ? 'yesno'
+            : answerTypeRaw === 'number'
+              ? 'number'
+              : 'text';
+
+      if (!key || !label) continue;
+
+      m.set(n.id, {
+        id: n.id,
+        key,
+        label,
+        helper: safeString(n.properties.helper) || undefined,
+        answerType,
+        required: n.properties.required === true,
+      });
+    }
+    return m;
+  }, [data.nodes]);
+
   const facilityReports = useMemo(() => {
     if (!selectedFacility) return [] as GraphNode[];
 
@@ -150,6 +236,65 @@ export function TriReportingQuestionnaire({
   const activeReport = useMemo(() => {
     return facilityReports[0] ?? null;
   }, [facilityReports]);
+
+  const activityRows = useMemo(() => {
+    if (!activeReport)
+      return [] as Array<{
+        chemicalId: string;
+        chemicalLabel: string;
+        activityType: string;
+        quantity: number;
+        unit: string;
+      }>;
+
+    const activityIds = new Set<string>();
+    for (const e of outgoing.get(activeReport.id) ?? []) {
+      if (e.predicate === 'activities') activityIds.add(e.target);
+    }
+
+    const rows: Array<{
+      chemicalId: string;
+      chemicalLabel: string;
+      activityType: string;
+      quantity: number;
+      unit: string;
+    }> = [];
+
+    for (const id of activityIds) {
+      const activity = nodesById.get(id);
+      if (!activity) continue;
+      if (!activity.type.toLowerCase().includes('chemicalactivity')) continue;
+
+      const chemEdge = (outgoing.get(activity.id) ?? []).find(
+        (e) => e.predicate === 'chemical',
+      );
+      const chem = chemEdge ? (nodesById.get(chemEdge.target) ?? null) : null;
+      const quantity = safeNumber(activity.properties.quantity) ?? 0;
+      const unit = safeString(activity.properties.unit) || 'pounds';
+      const activityType = safeString(activity.properties.activityType);
+
+      rows.push({
+        chemicalId: chem?.id ?? '',
+        chemicalLabel: chem?.label ?? 'Unknown chemical',
+        activityType,
+        quantity,
+        unit,
+      });
+    }
+
+    rows.sort((a, b) => b.quantity - a.quantity);
+    return rows;
+  }, [activeReport, nodesById, outgoing]);
+
+  const thresholdSignals = useMemo(() => {
+    const unit = activityRows[0]?.unit ?? 'pounds';
+    const exceeders = activityRows.filter((r) => r.quantity >= threshold);
+    return {
+      unit,
+      exceeders,
+      anyExceeded: exceeders.length > 0,
+    };
+  }, [activityRows, threshold]);
 
   const facilityReleases = useMemo(() => {
     if (!selectedFacility) return [] as GraphNode[];
@@ -218,6 +363,46 @@ export function TriReportingQuestionnaire({
   const questions = useMemo<Question[]>(() => {
     const facilityName = selectedFacility?.label ?? 'this facility';
     const reportName = activeReport?.label ?? `TRI report ${reportingYear}`;
+
+    const templateAvailable =
+      questionnaireTemplate &&
+      templateSections.length > 0 &&
+      templateQuestionsById.size > 0;
+
+    if (templateAvailable) {
+      const sections = templateSections.length
+        ? templateSections
+        : [{ id: 'default', name: 'Questions', questionIds: [] }];
+
+      const all: Question[] = [];
+      for (const section of sections) {
+        const title = section.name || 'Questions';
+        const qids = section.questionIds;
+
+        for (const qid of qids) {
+          const tq = templateQuestionsById.get(qid);
+          if (!tq) continue;
+
+          const renderWithContext = (s: string) =>
+            s
+              .replaceAll('{{facilityName}}', facilityName)
+              .replaceAll('{{reportName}}', reportName)
+              .replaceAll('{{reportingYear}}', String(reportingYear))
+              .replaceAll('{{threshold}}', threshold.toLocaleString());
+
+          all.push({
+            id: tq.key,
+            section: title,
+            label: renderWithContext(tq.label),
+            helper: tq.helper ? renderWithContext(tq.helper) : undefined,
+            type: tq.answerType,
+            required: tq.required,
+          });
+        }
+      }
+
+      if (all.length > 0) return all;
+    }
 
     return [
       {
@@ -320,9 +505,81 @@ export function TriReportingQuestionnaire({
         required: true,
       },
     ];
-  }, [activeReport?.label, reportingYear, selectedFacility?.label, threshold]);
+  }, [
+    activeReport?.label,
+    questionnaireTemplate,
+    reportingYear,
+    selectedFacility?.label,
+    templateQuestionsById,
+    templateSections,
+    threshold,
+  ]);
+
+  const prefilledAnswers = useMemo<Record<string, unknown>>(() => {
+    if (!selectedFacility) return {};
+
+    const result: Record<string, unknown> = {};
+
+    const coordEdge = (outgoing.get(selectedFacility.id) ?? []).find(
+      (e) => e.predicate === 'triCoordinator',
+    );
+    const coordinator = coordEdge ? nodesById.get(coordEdge.target) : null;
+    if (coordinator) {
+      result.facility_contact_name = coordinator.label;
+      const email = safeString(coordinator.properties.email);
+      const phone = safeString(coordinator.properties.telephone);
+      if (email) result.facility_contact_email = email;
+      if (phone) result.facility_contact_phone = phone;
+    }
+
+    if (activeReport) {
+      for (const n of data.nodes) {
+        if (!n.type.toLowerCase().includes('answer')) continue;
+
+        const answerFacilityEdge = (outgoing.get(n.id) ?? []).find(
+          (e) => e.predicate === 'facility',
+        );
+        const answerReportEdge = (outgoing.get(n.id) ?? []).find(
+          (e) => e.predicate === 'report',
+        );
+        const questionEdge = (outgoing.get(n.id) ?? []).find(
+          (e) => e.predicate === 'question',
+        );
+
+        if (!answerFacilityEdge || !answerReportEdge || !questionEdge) continue;
+        if (answerFacilityEdge.target !== selectedFacility.id) continue;
+        if (answerReportEdge.target !== activeReport.id) continue;
+
+        const questionNode = nodesById.get(questionEdge.target);
+        if (!questionNode) continue;
+        const key = safeString(questionNode.properties.key);
+        if (!key) continue;
+
+        const value = n.properties.value;
+        result[key] = value;
+      }
+    }
+
+    if (activeReport && activityRows.length > 0) {
+      result.threshold_applicability = thresholdSignals.anyExceeded;
+    }
+
+    return result;
+  }, [
+    activeReport,
+    activityRows.length,
+    data.nodes,
+    nodesById,
+    outgoing,
+    selectedFacility,
+    thresholdSignals.anyExceeded,
+  ]);
 
   const [answers, setAnswers] = useState<Record<string, unknown>>({});
+
+  const effectiveAnswers = useMemo(() => {
+    return { ...prefilledAnswers, ...answers };
+  }, [answers, prefilledAnswers]);
 
   const sectionOrder = useMemo(() => {
     const order: string[] = [];
@@ -335,7 +592,7 @@ export function TriReportingQuestionnaire({
   const progress = useMemo(() => {
     const required = questions.filter((q) => q.required);
     const requiredAnswered = required.filter((q) => {
-      const v = answers[q.id];
+      const v = effectiveAnswers[q.id];
       if (q.type === 'checkbox') return v === true;
       if (q.type === 'yesno') return v === true || v === false;
       const s = safeString(v).trim();
@@ -350,7 +607,7 @@ export function TriReportingQuestionnaire({
           ? Math.round((requiredAnswered / required.length) * 100)
           : 0,
     };
-  }, [answers, questions]);
+  }, [effectiveAnswers, questions]);
 
   const summaryText = useMemo(() => {
     const facilityId = safeString(selectedFacility?.properties.facilityId);
@@ -358,6 +615,8 @@ export function TriReportingQuestionnaire({
     const state = safeString(selectedFacility?.properties.state);
     const naics = safeString(selectedFacility?.properties.naicsCode);
     const submissionDate = safeString(activeReport?.properties.submissionDate);
+    const dueDate = safeString(activeReport?.properties.dueDate);
+    const status = safeString(activeReport?.properties.status);
 
     const lines: string[] = [];
     lines.push(`TRI Reporting Questionnaire Summary`);
@@ -368,12 +627,29 @@ export function TriReportingQuestionnaire({
     if (naics) lines.push(`NAICS: ${naics}`);
     lines.push(`Reporting year: ${reportingYear}`);
     if (submissionDate) lines.push(`Target submission date: ${submissionDate}`);
+    if (dueDate && dueDate !== submissionDate)
+      lines.push(`Due date: ${dueDate}`);
+    if (status) lines.push(`Status: ${status}`);
     lines.push('');
+
+    if (activityRows.length > 0) {
+      lines.push('Threshold basis (manufactured/processed/otherwise used)');
+      lines.push(
+        `- TRI threshold: ${threshold.toLocaleString()} ${thresholdSignals.unit}`,
+      );
+      lines.push(`- Exceeded: ${thresholdSignals.anyExceeded ? 'Yes' : 'No'}`);
+      for (const r of thresholdSignals.exceeders) {
+        lines.push(
+          `  - ${r.chemicalLabel}: ${r.quantity.toLocaleString()} ${r.unit} (${r.activityType})`,
+        );
+      }
+      lines.push('');
+    }
 
     for (const section of sectionOrder) {
       lines.push(section);
       for (const q of questions.filter((qq) => qq.section === section)) {
-        const v = answers[q.id];
+        const v = effectiveAnswers[q.id];
         const rendered =
           q.type === 'checkbox'
             ? v === true
@@ -405,12 +681,55 @@ export function TriReportingQuestionnaire({
       lines.push(
         `- Land disposal: ${totals.land.toLocaleString()} ${totals.unit}`,
       );
+
+      const evidenceDocs = new Set<string>();
+      const estimationMethods = new Set<string>();
+      const sourceSystems = new Set<string>();
+      const wasteMethods = new Set<string>();
+
+      for (const r of releasesWithChemicals) {
+        const src = safeString(r.release.properties.dataSourceSystem);
+        const method = safeString(r.release.properties.estimationMethod);
+        const wm = safeString(r.release.properties.wasteManagementMethod);
+        if (src) sourceSystems.add(src);
+        if (method) estimationMethods.add(method);
+        if (wm) wasteMethods.add(wm);
+
+        const ev = r.release.properties.evidence;
+        if (Array.isArray(ev)) {
+          for (const v of ev) evidenceDocs.add(safeString(v));
+        } else if (typeof ev === 'string') {
+          evidenceDocs.add(ev);
+        }
+      }
+
+      if (sourceSystems.size > 0) {
+        lines.push(`- Source systems: ${Array.from(sourceSystems).join(', ')}`);
+      }
+      if (estimationMethods.size > 0) {
+        lines.push(
+          `- Estimation methods: ${Array.from(estimationMethods).join(', ')}`,
+        );
+      }
+      if (wasteMethods.size > 0) {
+        lines.push(
+          `- Waste management methods: ${Array.from(wasteMethods).join(', ')}`,
+        );
+      }
+      if (evidenceDocs.size > 0) {
+        lines.push(
+          `- Evidence: ${Array.from(evidenceDocs).filter(Boolean).join(', ')}`,
+        );
+      }
     }
 
     return lines.join('\n');
   }, [
     activeReport?.properties.submissionDate,
-    answers,
+    activeReport?.properties.dueDate,
+    activeReport?.properties.status,
+    activityRows,
+    effectiveAnswers,
     questions,
     releasesWithChemicals.length,
     reportingYear,
@@ -420,6 +739,10 @@ export function TriReportingQuestionnaire({
     selectedFacility?.properties.facilityId,
     selectedFacility?.properties.naicsCode,
     selectedFacility?.properties.state,
+    threshold,
+    thresholdSignals.anyExceeded,
+    thresholdSignals.exceeders,
+    thresholdSignals.unit,
     totals.air,
     totals.land,
     totals.total,
@@ -440,7 +763,7 @@ export function TriReportingQuestionnaire({
   }
 
   function renderQuestion(q: Question) {
-    const value = answers[q.id];
+    const value = effectiveAnswers[q.id];
 
     if (q.type === 'checkbox') {
       return (
@@ -528,6 +851,14 @@ export function TriReportingQuestionnaire({
               A facility-manager template to gather what corporate needs for
               compliant TRI reporting.
             </p>
+            {questionnaireTemplate && (
+              <div className="text-xs text-slate-500 mt-2">
+                Template: {questionnaireTemplate.name}
+                {questionnaireTemplate.version
+                  ? ` (v${questionnaireTemplate.version})`
+                  : ''}
+              </div>
+            )}
           </div>
 
           <div className="flex items-center gap-3">
@@ -623,6 +954,10 @@ export function TriReportingQuestionnaire({
                           '—'}
                       </div>
                       <div>
+                        <span className="text-slate-500">Status:</span>{' '}
+                        {safeString(activeReport?.properties.status) || '—'}
+                      </div>
+                      <div>
                         <span className="text-slate-500">Threshold:</span> ≥{' '}
                         {threshold.toLocaleString()} lbs
                       </div>
@@ -632,6 +967,14 @@ export function TriReportingQuestionnaire({
                         </span>{' '}
                         {releasesWithChemicals.length}
                       </div>
+                      {activityRows.length > 0 && (
+                        <div>
+                          <span className="text-slate-500">
+                            Threshold exceeded:
+                          </span>{' '}
+                          {thresholdSignals.anyExceeded ? 'Yes' : 'No'}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

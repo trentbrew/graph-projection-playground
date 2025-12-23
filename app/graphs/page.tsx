@@ -5,6 +5,7 @@ import { sampleDatasets, defaultDataset } from './data';
 import { CardGridView } from './components/CardGridView';
 import { FormDetailView } from './components/FormDetailView';
 import { SankeyDiagram } from './components/SankeyDiagram';
+import { VueFlowProjection } from './components/VueFlowProjection';
 import {
   Atom,
   Circle,
@@ -1906,6 +1907,7 @@ function NodeDetails({ node, edges }: any) {
 // Read-only projections: cannot edit data, only view
 const readOnlyProjections = [
   { id: 'force', name: 'Force-Directed', icon: Atom, category: 'Graph' },
+  { id: 'vueflow', name: 'VueFlow', icon: LayoutGrid, category: 'Graph' },
   { id: 'radial', name: 'Radial', icon: Circle, category: 'Graph' },
   { id: 'arc', name: 'Arc Diagram', icon: Minus, category: 'Graph' },
   { id: 'chord', name: 'Chord', icon: Disc, category: 'Graph' },
@@ -2137,6 +2139,8 @@ export default function JsonLdVisualizer() {
         );
       case 'matrix':
         return <AdjacencyMatrix data={filteredData} />;
+      case 'vueflow':
+        return <VueFlowProjection data={filteredData} />;
       case 'sankey':
         return <SankeyDiagram data={filteredData} />;
       case 'erd':
@@ -2583,6 +2587,8 @@ export default function JsonLdVisualizer() {
           <span>
             {activeTab === 'force' &&
               'Drag nodes to reposition. Scroll to zoom.'}
+            {activeTab === 'vueflow' &&
+              'Interactive canvas view (VueFlow). Drag nodes, pan, and zoom.'}
             {activeTab === 'radial' &&
               'Nodes grouped by type in concentric rings.'}
             {activeTab === 'arc' && 'Linear layout with curved edges.'}

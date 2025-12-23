@@ -11,6 +11,10 @@
       "@id": "tri:releases",
       "@type": "@id"
     },
+    "activities": {
+      "@id": "tri:activities",
+      "@type": "@id"
+    },
     "chemical": {
       "@id": "tri:chemical",
       "@type": "@id"
@@ -30,6 +34,42 @@
     "parentCompany": {
       "@id": "tri:parentCompany",
       "@type": "@id"
+    },
+    "triCoordinator": {
+      "@id": "tri:triCoordinator",
+      "@type": "@id"
+    },
+    "triProgramOwner": {
+      "@id": "tri:triProgramOwner",
+      "@type": "@id"
+    },
+    "sections": {
+      "@id": "tri:sections",
+      "@type": "@id"
+    },
+    "questions": {
+      "@id": "tri:questions",
+      "@type": "@id"
+    },
+    "question": {
+      "@id": "tri:question",
+      "@type": "@id"
+    },
+    "report": {
+      "@id": "tri:report",
+      "@type": "@id"
+    },
+    "answeredBy": {
+      "@id": "tri:answeredBy",
+      "@type": "@id"
+    },
+    "evidence": {
+      "@id": "tri:evidence",
+      "@type": "@id"
+    },
+    "wasteManagementMethod": {
+      "@id": "tri:wasteManagementMethod",
+      "@type": "@id"
     }
   },
   "@graph": [
@@ -44,6 +84,15 @@
       "naicsCode": "331110"
     },
     {
+      "@id": "tri:person/nucor-tri-program-owner",
+      "@type": "Person",
+      "name": "Alex Morgan",
+      "jobTitle": "Corporate TRI Program Owner",
+      "email": "tri-program@nucor.example",
+      "telephone": "+1-555-0100",
+      "worksFor": { "@id": "tri:company/nucor" }
+    },
+    {
       "@id": "tri:facility/nucor-berkeley",
       "@type": "tri:Facility",
       "name": "Nucor Steel Berkeley",
@@ -54,9 +103,19 @@
       "latitude": 33.0547,
       "longitude": -79.9547,
       "parentCompany": { "@id": "tri:company/nucor" },
+      "triCoordinator": { "@id": "tri:person/berkeley-tri-coordinator" },
       "industryType": "Steel Mills",
       "naicsCode": "331110",
       "reports": [{ "@id": "tri:report/2024-berkeley" }]
+    },
+    {
+      "@id": "tri:person/berkeley-tri-coordinator",
+      "@type": "Person",
+      "name": "Pat Rivera",
+      "jobTitle": "EHS Specialist (TRI Coordinator)",
+      "email": "tri-berkeley@nucor.example",
+      "telephone": "+1-555-0111",
+      "worksFor": { "@id": "tri:company/nucor" }
     },
     {
       "@id": "tri:facility/nucor-hertford",
@@ -69,9 +128,19 @@
       "latitude": 36.3547,
       "longitude": -76.9547,
       "parentCompany": { "@id": "tri:company/nucor" },
+      "triCoordinator": { "@id": "tri:person/hertford-tri-coordinator" },
       "industryType": "Steel Mills",
       "naicsCode": "331110",
       "reports": [{ "@id": "tri:report/2024-hertford" }]
+    },
+    {
+      "@id": "tri:person/hertford-tri-coordinator",
+      "@type": "Person",
+      "name": "Jordan Lee",
+      "jobTitle": "Plant Environmental Manager (TRI)",
+      "email": "tri-hertford@nucor.example",
+      "telephone": "+1-555-0222",
+      "worksFor": { "@id": "tri:company/nucor" }
     },
     {
       "@id": "tri:report/2024-berkeley",
@@ -79,8 +148,19 @@
       "name": "2024 TRI Report - Nucor Berkeley",
       "reportingYear": 2024,
       "submissionDate": "2024-07-01",
+      "dueDate": "2024-07-01",
+      "status": "Draft",
       "facility": { "@id": "tri:facility/nucor-berkeley" },
       "submittedTo": { "@id": "tri:agency/epa" },
+      "regulatedBy": { "@id": "tri:regulation/epcra-section-313" },
+      "preparedBy": { "@id": "tri:person/berkeley-tri-coordinator" },
+      "certifiedBy": { "@id": "tri:person/nucor-tri-program-owner" },
+      "activities": [
+        { "@id": "tri:activity/2024-berkeley/manganese/otherwise-used" },
+        { "@id": "tri:activity/2024-berkeley/zinc/processed" },
+        { "@id": "tri:activity/2024-berkeley/chromium/otherwise-used" },
+        { "@id": "tri:activity/2024-berkeley/nickel/otherwise-used" }
+      ],
       "releases": [
         { "@id": "tri:release/berkeley-manganese" },
         { "@id": "tri:release/berkeley-zinc" },
@@ -94,13 +174,100 @@
       "name": "2024 TRI Report - Nucor Hertford",
       "reportingYear": 2024,
       "submissionDate": "2024-07-01",
+      "dueDate": "2024-07-01",
+      "status": "Draft",
       "facility": { "@id": "tri:facility/nucor-hertford" },
       "submittedTo": { "@id": "tri:agency/epa" },
+      "regulatedBy": { "@id": "tri:regulation/epcra-section-313" },
+      "preparedBy": { "@id": "tri:person/hertford-tri-coordinator" },
+      "certifiedBy": { "@id": "tri:person/nucor-tri-program-owner" },
+      "activities": [
+        { "@id": "tri:activity/2024-hertford/manganese/otherwise-used" },
+        { "@id": "tri:activity/2024-hertford/zinc/processed" },
+        { "@id": "tri:activity/2024-hertford/lead/otherwise-used" }
+      ],
       "releases": [
         { "@id": "tri:release/hertford-manganese" },
         { "@id": "tri:release/hertford-zinc" },
         { "@id": "tri:release/hertford-lead" }
       ]
+    },
+    {
+      "@id": "tri:activity/2024-berkeley/manganese/otherwise-used",
+      "@type": "tri:ChemicalActivity",
+      "name": "Manganese otherwise used - Berkeley 2024",
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "chemical": { "@id": "tri:chemical/manganese" },
+      "activityType": "otherwiseUsed",
+      "quantity": 30500,
+      "unit": "pounds"
+    },
+    {
+      "@id": "tri:activity/2024-berkeley/zinc/processed",
+      "@type": "tri:ChemicalActivity",
+      "name": "Zinc processed - Berkeley 2024",
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "chemical": { "@id": "tri:chemical/zinc" },
+      "activityType": "processed",
+      "quantity": 22100,
+      "unit": "pounds"
+    },
+    {
+      "@id": "tri:activity/2024-berkeley/chromium/otherwise-used",
+      "@type": "tri:ChemicalActivity",
+      "name": "Chromium otherwise used - Berkeley 2024",
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "chemical": { "@id": "tri:chemical/chromium" },
+      "activityType": "otherwiseUsed",
+      "quantity": 8800,
+      "unit": "pounds"
+    },
+    {
+      "@id": "tri:activity/2024-berkeley/nickel/otherwise-used",
+      "@type": "tri:ChemicalActivity",
+      "name": "Nickel otherwise used - Berkeley 2024",
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "chemical": { "@id": "tri:chemical/nickel" },
+      "activityType": "otherwiseUsed",
+      "quantity": 6400,
+      "unit": "pounds"
+    },
+    {
+      "@id": "tri:activity/2024-hertford/manganese/otherwise-used",
+      "@type": "tri:ChemicalActivity",
+      "name": "Manganese otherwise used - Hertford 2024",
+      "report": { "@id": "tri:report/2024-hertford" },
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "chemical": { "@id": "tri:chemical/manganese" },
+      "activityType": "otherwiseUsed",
+      "quantity": 25200,
+      "unit": "pounds"
+    },
+    {
+      "@id": "tri:activity/2024-hertford/zinc/processed",
+      "@type": "tri:ChemicalActivity",
+      "name": "Zinc processed - Hertford 2024",
+      "report": { "@id": "tri:report/2024-hertford" },
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "chemical": { "@id": "tri:chemical/zinc" },
+      "activityType": "processed",
+      "quantity": 18100,
+      "unit": "pounds"
+    },
+    {
+      "@id": "tri:activity/2024-hertford/lead/otherwise-used",
+      "@type": "tri:ChemicalActivity",
+      "name": "Lead otherwise used - Hertford 2024",
+      "report": { "@id": "tri:report/2024-hertford" },
+      "facility": { "@id": "tri:facility/nucor-hertford" },
+      "chemical": { "@id": "tri:chemical/lead" },
+      "activityType": "otherwiseUsed",
+      "quantity": 9900,
+      "unit": "pounds"
     },
     {
       "@id": "tri:release/berkeley-manganese",
@@ -113,7 +280,13 @@
       "airEmissions": 12300,
       "waterDischarges": 8900,
       "landDisposal": 24400,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "mass-balance",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/recycling" },
+      "evidence": [
+        { "@id": "tri:document/2024-berkeley/calculation-workpapers" }
+      ]
     },
     {
       "@id": "tri:release/berkeley-zinc",
@@ -126,7 +299,13 @@
       "airEmissions": 8700,
       "waterDischarges": 6200,
       "landDisposal": 17200,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "engineering-calc",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/treatment" },
+      "evidence": [
+        { "@id": "tri:document/2024-berkeley/calculation-workpapers" }
+      ]
     },
     {
       "@id": "tri:release/berkeley-chromium",
@@ -139,7 +318,10 @@
       "airEmissions": 5100,
       "waterDischarges": 4200,
       "landDisposal": 9600,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "supplier-data",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/landfill" }
     },
     {
       "@id": "tri:release/berkeley-nickel",
@@ -152,7 +334,10 @@
       "airEmissions": 4200,
       "waterDischarges": 3500,
       "landDisposal": 7700,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "engineering-calc",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/recycling" }
     },
     {
       "@id": "tri:release/hertford-manganese",
@@ -165,7 +350,13 @@
       "airEmissions": 10500,
       "waterDischarges": 7400,
       "landDisposal": 20300,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "mass-balance",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/recycling" },
+      "evidence": [
+        { "@id": "tri:document/2024-hertford/calculation-workpapers" }
+      ]
     },
     {
       "@id": "tri:release/hertford-zinc",
@@ -178,7 +369,10 @@
       "airEmissions": 7600,
       "waterDischarges": 5300,
       "landDisposal": 14900,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "engineering-calc",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/treatment" }
     },
     {
       "@id": "tri:release/hertford-lead",
@@ -191,7 +385,24 @@
       "airEmissions": 3400,
       "waterDischarges": 2800,
       "landDisposal": 6400,
-      "releaseType": "On-site"
+      "releaseType": "On-site",
+      "dataSourceSystem": "EHS Platform",
+      "estimationMethod": "supplier-data",
+      "wasteManagementMethod": { "@id": "tri:wasteManagement/landfill" }
+    },
+    {
+      "@id": "tri:document/2024-berkeley/calculation-workpapers",
+      "@type": "CreativeWork",
+      "name": "2024 Berkeley TRI Calculation Workpapers",
+      "description": "Supporting calculations, manifests, and data extracts used to estimate releases.",
+      "dateCreated": "2024-06-20"
+    },
+    {
+      "@id": "tri:document/2024-hertford/calculation-workpapers",
+      "@type": "CreativeWork",
+      "name": "2024 Hertford TRI Calculation Workpapers",
+      "description": "Supporting calculations, manifests, and data extracts used to estimate releases.",
+      "dateCreated": "2024-06-18"
     },
     {
       "@id": "tri:chemical/manganese",
@@ -256,6 +467,230 @@
       "requiresReporting": true,
       "reportingThreshold": 25000,
       "thresholdUnit": "pounds"
+    },
+    {
+      "@id": "tri:questionnaireTemplate/tri-reporting",
+      "@type": "tri:QuestionnaireTemplate",
+      "name": "TRI Reporting Questionnaire",
+      "version": "1.0",
+      "sections": [
+        { "@id": "tri:questionSection/facility-contacts" },
+        { "@id": "tri:questionSection/facility-profile" },
+        { "@id": "tri:questionSection/reporting-period" },
+        { "@id": "tri:questionSection/threshold-determination" },
+        { "@id": "tri:questionSection/chemical-inventory" },
+        { "@id": "tri:questionSection/release-estimation" },
+        { "@id": "tri:questionSection/waste-management" },
+        { "@id": "tri:questionSection/certification" }
+      ]
+    },
+    {
+      "@id": "tri:questionSection/facility-contacts",
+      "@type": "tri:QuestionSection",
+      "name": "Facility contacts",
+      "order": 10,
+      "questions": [
+        { "@id": "tri:question/facility_contact_name" },
+        { "@id": "tri:question/facility_contact_email" },
+        { "@id": "tri:question/facility_contact_phone" }
+      ]
+    },
+    {
+      "@id": "tri:questionSection/facility-profile",
+      "@type": "tri:QuestionSection",
+      "name": "Facility profile",
+      "order": 20,
+      "questions": [{ "@id": "tri:question/verify_facility_profile" }]
+    },
+    {
+      "@id": "tri:questionSection/reporting-period",
+      "@type": "tri:QuestionSection",
+      "name": "Reporting period",
+      "order": 30,
+      "questions": [{ "@id": "tri:question/verify_reporting_year" }]
+    },
+    {
+      "@id": "tri:questionSection/threshold-determination",
+      "@type": "tri:QuestionSection",
+      "name": "Threshold determination",
+      "order": 40,
+      "questions": [{ "@id": "tri:question/threshold_applicability" }]
+    },
+    {
+      "@id": "tri:questionSection/chemical-inventory",
+      "@type": "tri:QuestionSection",
+      "name": "Chemical inventory",
+      "order": 50,
+      "questions": [{ "@id": "tri:question/chemical_list_confirmed" }]
+    },
+    {
+      "@id": "tri:questionSection/release-estimation",
+      "@type": "tri:QuestionSection",
+      "name": "Release estimation",
+      "order": 60,
+      "questions": [
+        { "@id": "tri:question/calculation_method" },
+        { "@id": "tri:question/controls_changes" }
+      ]
+    },
+    {
+      "@id": "tri:questionSection/waste-management",
+      "@type": "tri:QuestionSection",
+      "name": "Waste management",
+      "order": 70,
+      "questions": [{ "@id": "tri:question/waste_mgmt_summary" }]
+    },
+    {
+      "@id": "tri:questionSection/certification",
+      "@type": "tri:QuestionSection",
+      "name": "Certification",
+      "order": 80,
+      "questions": [
+        { "@id": "tri:question/certifier_name" },
+        { "@id": "tri:question/certify_accuracy" }
+      ]
+    },
+    {
+      "@id": "tri:question/facility_contact_name",
+      "@type": "tri:Question",
+      "key": "facility_contact_name",
+      "label": "Who is the TRI reporting lead for {{facilityName}}?",
+      "helper": "Name of the person coordinating data collection and submission.",
+      "answerType": "text",
+      "required": true
+    },
+    {
+      "@id": "tri:question/facility_contact_email",
+      "@type": "tri:Question",
+      "key": "facility_contact_email",
+      "label": "TRI reporting lead email",
+      "answerType": "text",
+      "required": true
+    },
+    {
+      "@id": "tri:question/facility_contact_phone",
+      "@type": "tri:Question",
+      "key": "facility_contact_phone",
+      "label": "TRI reporting lead phone number",
+      "answerType": "text",
+      "required": true
+    },
+    {
+      "@id": "tri:question/verify_facility_profile",
+      "@type": "tri:Question",
+      "key": "verify_facility_profile",
+      "label": "Confirm facility profile details for {{facilityName}} are accurate",
+      "helper": "Address, NAICS code, and parent company are correct.",
+      "answerType": "checkbox",
+      "required": true
+    },
+    {
+      "@id": "tri:question/verify_reporting_year",
+      "@type": "tri:Question",
+      "key": "verify_reporting_year",
+      "label": "Confirm reporting year {{reportingYear}} ({{reportName}})",
+      "helper": "If incorrect, contact corporate to align on the reporting cycle.",
+      "answerType": "checkbox",
+      "required": true
+    },
+    {
+      "@id": "tri:question/threshold_applicability",
+      "@type": "tri:Question",
+      "key": "threshold_applicability",
+      "label": "Did {{facilityName}} exceed the TRI threshold for any listed chemical (≥ {{threshold}} lbs)?",
+      "helper": "Consider manufactured, processed, or otherwise used quantities for the reporting year.",
+      "answerType": "yesno",
+      "required": true
+    },
+    {
+      "@id": "tri:question/chemical_list_confirmed",
+      "@type": "tri:Question",
+      "key": "chemical_list_confirmed",
+      "label": "Confirm the list of TRI chemicals and CAS numbers is complete",
+      "helper": "Include all reportable chemicals for the facility—even if releases are zero.",
+      "answerType": "checkbox",
+      "required": true
+    },
+    {
+      "@id": "tri:question/calculation_method",
+      "@type": "tri:Question",
+      "key": "calculation_method",
+      "label": "How were releases calculated/estimated?",
+      "helper": "Examples: continuous emissions monitoring, mass balance, engineering calculations, supplier data, etc.",
+      "answerType": "text",
+      "required": true
+    },
+    {
+      "@id": "tri:question/controls_changes",
+      "@type": "tri:Question",
+      "key": "controls_changes",
+      "label": "Were there any process or control changes that materially affected releases?",
+      "helper": "If yes, describe the change and when it occurred (e.g., new scrubber, process optimization).",
+      "answerType": "text"
+    },
+    {
+      "@id": "tri:question/waste_mgmt_summary",
+      "@type": "tri:Question",
+      "key": "waste_mgmt_summary",
+      "label": "Summarize waste management methods used (recycling/treatment/disposal)",
+      "answerType": "text"
+    },
+    {
+      "@id": "tri:question/certifier_name",
+      "@type": "tri:Question",
+      "key": "certifier_name",
+      "label": "Who will certify the TRI submission (name and title)?",
+      "helper": "Corporate may require an authorized official for sign-off.",
+      "answerType": "text",
+      "required": true
+    },
+    {
+      "@id": "tri:question/certify_accuracy",
+      "@type": "tri:Question",
+      "key": "certify_accuracy",
+      "label": "I certify the information collected is complete and accurate to the best of my knowledge",
+      "answerType": "checkbox",
+      "required": true
+    },
+    {
+      "@id": "tri:answer/2024-berkeley/facility_contact_name",
+      "@type": "tri:Answer",
+      "question": { "@id": "tri:question/facility_contact_name" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "value": "Pat Rivera",
+      "answeredBy": { "@id": "tri:person/berkeley-tri-coordinator" },
+      "answeredAt": "2024-06-15"
+    },
+    {
+      "@id": "tri:answer/2024-berkeley/facility_contact_email",
+      "@type": "tri:Answer",
+      "question": { "@id": "tri:question/facility_contact_email" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "value": "tri-berkeley@nucor.example",
+      "answeredBy": { "@id": "tri:person/berkeley-tri-coordinator" },
+      "answeredAt": "2024-06-15"
+    },
+    {
+      "@id": "tri:answer/2024-berkeley/facility_contact_phone",
+      "@type": "tri:Answer",
+      "question": { "@id": "tri:question/facility_contact_phone" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "value": "+1-555-0111",
+      "answeredBy": { "@id": "tri:person/berkeley-tri-coordinator" },
+      "answeredAt": "2024-06-15"
+    },
+    {
+      "@id": "tri:answer/2024-berkeley/calculation_method",
+      "@type": "tri:Answer",
+      "question": { "@id": "tri:question/calculation_method" },
+      "facility": { "@id": "tri:facility/nucor-berkeley" },
+      "report": { "@id": "tri:report/2024-berkeley" },
+      "value": "Mass balance for EAF dust + engineering calculations for wastewater; supplier data for alloy inputs.",
+      "answeredBy": { "@id": "tri:person/berkeley-tri-coordinator" },
+      "answeredAt": "2024-06-20"
     },
     {
       "@id": "tri:wasteManagement/recycling",
