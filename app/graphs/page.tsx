@@ -87,6 +87,29 @@ function stripJsonComments(jsonString: string): string {
   return result;
 }
 
+function useElementSize<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [size, setSize] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      setSize({ width: rect.width, height: rect.height });
+    };
+
+    update();
+
+    const ro = new ResizeObserver(() => update());
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return [ref, size] as const;
+}
+
 // ============ JSON-LD PARSER ============
 function parseJsonLd(doc: any) {
   const nodes: any[] = [];
@@ -237,13 +260,13 @@ function getTypeColor(type: any) {
 }
 
 // ============ FORCE-DIRECTED GRAPH ============
-function ForceDirectedGraph({ data }: any) {
+function ForceDirectedGraph({ data, width, height }: any) {
   const [positions, setPositions] = useState({});
   const [hovered, setHovered] = useState<string | null>(null);
   const [dragging, setDragging] = useState<string | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
-  const width = 550;
-  const height = 420;
+  const w = Math.max(1, Math.floor(width || 800));
+  const h = Math.max(1, Math.floor(height || 600));
 
   useEffect(() => {
     const initial: Record<string, any> = {};
@@ -251,15 +274,15 @@ function ForceDirectedGraph({ data }: any) {
       const angle = (i / data.nodes.length) * 2 * Math.PI;
       const r = 100 + Math.random() * 50;
       initial[node.id] = {
-        x: width / 2 + r * Math.cos(angle),
-        y: height / 2 + r * Math.sin(angle),
+        x: w / 2 + r * Math.cos(angle),
+        y: h / 2 + r * Math.sin(angle),
         vx: 0,
         vy: 0,
       };
     });
     // Use setTimeout to avoid calling setState synchronously within effect
     setTimeout(() => setPositions(initial), 0);
-  }, [data]);
+  }, [data, w, h]);
 
   useEffect(() => {
     if (Object.keys(positions).length === 0) return;
@@ -267,8 +290,8 @@ function ForceDirectedGraph({ data }: any) {
     const interval = setInterval(() => {
       setPositions((prev) => {
         const next: Record<string, any> = { ...prev };
-        const centerX = width / 2;
-        const centerY = height / 2;
+        const centerX = w / 2;
+        const centerY = h / 2;
 
         data.nodes.forEach((node: any) => {
           if (!next[node.id] || dragging === node.id) return;
@@ -308,11 +331,11 @@ function ForceDirectedGraph({ data }: any) {
             vy: (next[node.id].vy + fy) * 0.85,
             x: Math.max(
               40,
-              Math.min(width - 40, next[node.id].x + next[node.id].vx * 0.1),
+              Math.min(w - 40, next[node.id].x + next[node.id].vx * 0.1),
             ),
             y: Math.max(
               40,
-              Math.min(height - 40, next[node.id].y + next[node.id].vy * 0.1),
+              Math.min(h - 40, next[node.id].y + next[node.id].vy * 0.1),
             ),
           };
         });
@@ -322,7 +345,7 @@ function ForceDirectedGraph({ data }: any) {
     }, 16);
 
     return () => clearInterval(interval);
-  }, [positions, data, dragging]);
+  }, [positions, data, dragging, w, h]);
 
   const handleMouseMove = useCallback(
     (e: any) => {
@@ -347,12 +370,12 @@ function ForceDirectedGraph({ data }: any) {
   return (
     <svg
       ref={svgRef}
-      width={width}
-      height={height}
+      width={w}
+      height={h}
       onMouseMove={handleMouseMove}
       onMouseUp={() => setDragging(null)}
       onMouseLeave={() => setDragging(null)}
-      className="cursor-grab"
+      className="w-full h-full cursor-grab"
     >
       <defs>
         <marker
@@ -444,12 +467,12 @@ function ForceDirectedGraph({ data }: any) {
 }
 
 // ============ RADIAL GRAPH ============
-function RadialGraph({ data }: any) {
+function RadialGraph({ data, width, height }: any) {
   const [hovered, setHovered] = useState<string | null>(null);
-  const width = 480;
-  const height = 480;
-  const cx = width / 2;
-  const cy = height / 2;
+  const w = Math.max(1, Math.floor(width || 800));
+  const h = Math.max(1, Math.floor(height || 600));
+  const cx = w / 2;
+  const cy = h / 2;
 
   // Group by type
   const typeGroups: Record<string, any[]> = {};
@@ -459,7 +482,8 @@ function RadialGraph({ data }: any) {
   });
 
   const types = Object.keys(typeGroups);
-  const ringStep = 160 / (types.length || 1);
+  const maxRadius = Math.max(60, Math.min(w, h) * 0.33);
+  const ringStep = (maxRadius - 40) / (types.length || 1);
 
   const nodePositions: Record<string, any> = {};
   types.forEach((type, typeIndex) => {
@@ -475,7 +499,7 @@ function RadialGraph({ data }: any) {
   });
 
   return (
-    <svg width={width} height={height}>
+    <svg width={w} height={h} className="w-full h-full">
       {types.map((_, i) => (
         <circle
           key={i}
@@ -550,22 +574,22 @@ function RadialGraph({ data }: any) {
 }
 
 // ============ ARC DIAGRAM ============
-function ArcDiagram({ data }: any) {
+function ArcDiagram({ data, width, height }: any) {
   const [hovered, setHovered] = useState<string | null>(null);
-  const width = 580;
-  const height = 320;
-  const nodeY = height - 50;
+  const w = Math.max(1, Math.floor(width || 900));
+  const h = Math.max(1, Math.floor(height || 520));
+  const nodeY = h - 50;
 
   const nodePositions: Record<string, any> = {};
   data.nodes.forEach((node: any, i: number) => {
     nodePositions[node.id] = {
-      x: 50 + (i / (data.nodes.length - 1 || 1)) * (width - 100),
+      x: 50 + (i / (data.nodes.length - 1 || 1)) * (w - 100),
       y: nodeY,
     };
   });
 
   return (
-    <svg width={width} height={height}>
+    <svg width={w} height={h} className="w-full h-full">
       {data.edges.map((edge: any, i: number) => {
         const source = nodePositions[edge.source];
         const target = nodePositions[edge.target];
@@ -575,7 +599,7 @@ function ArcDiagram({ data }: any) {
           hovered === edge.source || hovered === edge.target;
         const midX = (source.x + target.x) / 2;
         const dist = Math.abs(target.x - source.x);
-        const arcHeight = Math.min(dist * 0.45, 140);
+        const arcHeight = Math.min(dist * 0.45, Math.max(140, h * 0.4));
 
         return (
           <path
@@ -719,13 +743,13 @@ function AdjacencyMatrix({ data }: any) {
 }
 
 // ============ EDGE BUNDLING ============
-function EdgeBundling({ data }: any) {
+function EdgeBundling({ data, width, height }: any) {
   const [hovered, setHovered] = useState<string | null>(null);
-  const width = 480;
-  const height = 480;
-  const cx = width / 2;
-  const cy = height / 2;
-  const radius = 190;
+  const w = Math.max(1, Math.floor(width || 800));
+  const h = Math.max(1, Math.floor(height || 600));
+  const cx = w / 2;
+  const cy = h / 2;
+  const radius = Math.max(80, Math.min(w, h) * 0.4);
 
   const sortedNodes = [...data.nodes].sort((a, b) =>
     a.type.localeCompare(b.type),
@@ -1712,14 +1736,14 @@ function KanbanBoard({ data }: any) {
 }
 
 // ============ CHORD DIAGRAM ============
-function ChordDiagram({ data }: any) {
+function ChordDiagram({ data, width, height }: any) {
   const [hovered, setHovered] = useState<string | null>(null);
-  const width = 450;
-  const height = 450;
-  const cx = width / 2;
-  const cy = height / 2;
-  const outerRadius = 190;
-  const innerRadius = 170;
+  const w = Math.max(1, Math.floor(width || 700));
+  const h = Math.max(1, Math.floor(height || 700));
+  const cx = w / 2;
+  const cy = h / 2;
+  const outerRadius = Math.max(90, Math.min(w, h) * 0.42);
+  const innerRadius = Math.max(70, outerRadius - 24);
 
   const nodeAngle = (2 * Math.PI) / data.nodes.length;
   const nodePositions: Record<string, any> = {};
@@ -2048,7 +2072,12 @@ export default function JsonLdVisualizer() {
     );
   }, [graphData, filters]);
 
+  const [vizPanelRef, vizPanelSize] = useElementSize<HTMLDivElement>();
+
   const renderVisualization = () => {
+    const panelWidth = Math.max(1, Math.floor(vizPanelSize.width));
+    const panelHeight = Math.max(1, Math.floor(vizPanelSize.height));
+
     // Bespoke projection doesn't need filtered data check
     if (activeTab === 'dashboard' && currentDataset?.bespokeProjection) {
       const BespokeComponent = currentDataset.bespokeProjection;
@@ -2063,15 +2092,45 @@ export default function JsonLdVisualizer() {
 
     switch (activeTab) {
       case 'force':
-        return <ForceDirectedGraph data={filteredData} />;
+        return (
+          <ForceDirectedGraph
+            data={filteredData}
+            width={panelWidth}
+            height={panelHeight}
+          />
+        );
       case 'radial':
-        return <RadialGraph data={filteredData} />;
+        return (
+          <RadialGraph
+            data={filteredData}
+            width={panelWidth}
+            height={panelHeight}
+          />
+        );
       case 'arc':
-        return <ArcDiagram data={filteredData} />;
+        return (
+          <ArcDiagram
+            data={filteredData}
+            width={panelWidth}
+            height={panelHeight}
+          />
+        );
       case 'chord':
-        return <ChordDiagram data={filteredData} />;
+        return (
+          <ChordDiagram
+            data={filteredData}
+            width={panelWidth}
+            height={panelHeight}
+          />
+        );
       case 'bundle':
-        return <EdgeBundling data={filteredData} />;
+        return (
+          <EdgeBundling
+            data={filteredData}
+            width={panelWidth}
+            height={panelHeight}
+          />
+        );
       case 'matrix':
         return <AdjacencyMatrix data={filteredData} />;
       case 'sankey':
@@ -2346,7 +2405,9 @@ export default function JsonLdVisualizer() {
         {/* Center - Visualization */}
         <div className="flex-1 flex flex-col overflow-hidden bg-slate-900">
           <div className="flex-1 w-full h-full flex items-center justify-center overflow-auto p-8">
-            {renderVisualization()}
+            <div ref={vizPanelRef} className="w-full h-full">
+              {renderVisualization()}
+            </div>
           </div>
         </div>
 
