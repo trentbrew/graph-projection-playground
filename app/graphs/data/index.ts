@@ -11,6 +11,7 @@ import musicTheory from './music-theory.json';
 import financePortfolio from './finance-portfolio.json';
 import systemsArchitecture from './systems-architecture.json';
 import triReporting from './tri-reporting.json';
+import { TriReportingQuestionnaire } from '../components/bespoke/TriReportingQuestionnaire';
 
 export interface SampleDataset {
   id: string;
@@ -92,6 +93,7 @@ export const sampleDatasets: SampleDataset[] = [
     name: 'TRI Reporting',
     description: 'EPA Toxics Release Inventory data for Nucor steel facilities',
     data: triReporting,
+    bespokeProjection: TriReportingQuestionnaire,
   },
 ];
 

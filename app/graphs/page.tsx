@@ -1231,9 +1231,13 @@ function ERDiagram({ data }: any) {
   const width: number = 900;
   const height: number = 600;
 
-  const entityTypes: string[] = [
-    ...new Set(data.nodes.map((n: any) => n.type)),
-  ];
+  const entityTypes: string[] = Array.from(
+    new Set<string>(
+      data.nodes
+        .map((n: any) => n.type)
+        .filter((t: unknown): t is string => typeof t === 'string'),
+    ),
+  );
   const entitiesByType: Record<string, any[]> = {};
 
   entityTypes.forEach((type: string) => {
